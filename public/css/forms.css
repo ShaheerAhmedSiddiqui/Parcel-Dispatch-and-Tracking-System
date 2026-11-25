@@ -1,0 +1,298 @@
+
+/* =========================================
+   PARCEL REGISTRATION FORM
+========================================= */
+
+.register-heading {
+    margin-bottom: 24px;
+}
+
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.form-section,
+.charge-section {
+    background: #ffffff;
+    border: 1px solid #e9e9e9;
+    border-radius: 12px;
+    padding: 26px;
+}
+
+.form-section-heading {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+}
+
+.form-section-icon {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: #fff0eb;
+    color: #ff6e49;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.form-section-heading h2,
+.charge-information h2 {
+    margin: 0 0 5px;
+    color: #171717;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.form-section-heading p,
+.charge-information p {
+    margin: 0;
+    color: #777777;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+.form-field-full {
+    grid-column: 1 / -1;
+}
+
+.form-field label {
+    color: #333333;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.form-field label span {
+    color: #e65336;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+    width: 100%;
+    min-height: 45px;
+    padding: 11px 13px;
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #171717;
+    font-family: inherit;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-field textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+    border-color: #ff6e49;
+    box-shadow: 0 0 0 3px rgba(255, 110, 73, 0.12);
+}
+
+.form-field input::placeholder,
+.form-field textarea::placeholder {
+    color: #aaaaaa;
+}
+
+.form-field small {
+    color: #888888;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+/* Charge estimate */
+
+.charge-section {
+    background: #fffaf8;
+    border-color: #f4ddd5;
+}
+
+.charge-information {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.charge-icon {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: #ff6e49;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.charge-result {
+    margin: 22px 0 12px;
+    min-height: 62px;
+    display: flex;
+    align-items: center;
+}
+
+.charge-placeholder {
+    color: #888888;
+    font-size: 13px;
+}
+
+.charge-amount {
+    color: #171717;
+    font-size: 30px;
+    font-weight: 750;
+    letter-spacing: -0.8px;
+}
+
+.charge-message {
+    min-height: 0;
+    margin-bottom: 10px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.charge-message:empty {
+    display: none;
+}
+
+.charge-message.error {
+    color: #c0392b;
+}
+
+.charge-message.success {
+    color: #24834b;
+}
+
+.quote-button {
+    min-height: 42px;
+    cursor: pointer;
+}
+
+.charge-note {
+    margin: 13px 0 0;
+    color: #888888;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+/* Alerts */
+
+.form-alert {
+    margin-bottom: 20px;
+    padding: 14px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.form-alert-error {
+    background: #fff0ef;
+    border: 1px solid #f2c5c1;
+    color: #a93226;
+}
+
+/* Actions */
+
+.form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 4px 0 20px;
+}
+
+.form-actions .btn,
+.quote-button {
+    min-height: 43px;
+    padding: 11px 20px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.btn-cancel {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #dddddd;
+    background: #ffffff;
+    color: #555555;
+}
+
+.btn-cancel:hover {
+    background: #f7f7f7;
+}
+
+.form-actions button:disabled,
+.quote-button:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+/* Responsive */
+
+@media (max-width: 650px) {
+    .form-section,
+    .charge-section {
+        padding: 19px 16px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 17px;
+    }
+
+    .form-field-full {
+        grid-column: auto;
+    }
+
+    .form-section-heading {
+        align-items: flex-start;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .form-actions .btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .charge-information {
+        align-items: flex-start;
+    }
+
+    .charge-amount {
+        font-size: 26px;
+    }
+}
