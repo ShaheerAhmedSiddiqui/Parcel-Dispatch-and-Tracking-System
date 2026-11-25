@@ -1,0 +1,403 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> | ParcelTrack</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/forms.css">
+    <link rel="stylesheet" href="/css/tables.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+</head>
+
+<body class="dashboard-body">
+
+    <%- include('../partials/dashboard-header') %>
+    <%- include('../partials/staff-sidebar') %>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="dashboard-main">
+        <div class="dashboard-content staff-detail-page">
+
+            <div class="staff-detail-back">
+                <a href="/staff">← Back to My Deliveries</a>
+            </div>
+
+            <!-- Page heading -->
+            <section class="page-heading staff-detail-heading">
+                <div>
+                    <h1>Delivery Details</h1>
+                    <p>View parcel information and manage its delivery progress.</p>
+                </div>
+
+                <%- include('../partials/status-badge', {
+                    status: parcel.currentStatus
+                }) %>
+            </section>
+
+            <% if (successMessage) { %>
+                <div class="staff-detail-alert success" role="alert">
+                    <%= successMessage %>
+                </div>
+            <% } %>
+
+            <% if (errorMessage) { %>
+                <div class="staff-detail-alert error" role="alert">
+                    <%= errorMessage %>
+                </div>
+            <% } %>
+
+            <!-- Tracking overview -->
+            <section class="dashboard-card staff-parcel-overview">
+                <div class="staff-overview-top">
+                    <div>
+                        <span class="staff-detail-label">Tracking Number</span>
+                        <h2><%= parcel.trackingNumber %></h2>
+                    </div>
+
+                    <div class="staff-attempt-counter">
+                        <span>Failed Attempts</span>
+                        <strong><%= parcel.attemptCount %> / 3</strong>
+                    </div>
+                </div>
+
+                <div class="staff-overview-grid">
+                    <div>
+                        <span>Registered On</span>
+                        <strong>
+                            <%= new Date(parcel.registeredAt).toLocaleString('en-GB') %>
+                        </strong>
+                    </div>
+
+                    <div>
+                        <span>Last Updated</span>
+                        <strong>
+                            <%= new Date(parcel.updatedAt).toLocaleString('en-GB') %>
+                        </strong>
+                    </div>
+
+                    <div>
+                        <span>Current Status</span>
+                        <strong><%= parcel.currentStatus %></strong>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sender and receiver -->
+            <section class="staff-detail-two-column">
+
+                <article class="dashboard-card staff-info-card">
+                    <div class="staff-card-heading">
+                        <h2>Sender Information</h2>
+                    </div>
+
+                    <div class="staff-info-list">
+                        <div>
+                            <span>Sender Name</span>
+                            <strong><%= parcel.senderName %></strong>
+                        </div>
+
+                        <div>
+                            <span>Contact Number</span>
+                            <strong><%= parcel.senderContact %></strong>
+                        </div>
+
+                        <div>
+                            <span>Pickup Address</span>
+                            <strong><%= parcel.pickupAddress %></strong>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="dashboard-card staff-info-card">
+                    <div class="staff-card-heading">
+                        <h2>Receiver Information</h2>
+                    </div>
+
+                    <div class="staff-info-list">
+                        <div>
+                            <span>Receiver Name</span>
+                            <strong><%= parcel.receiverName %></strong>
+                        </div>
+
+                        <div>
+                            <span>Contact Number</span>
+                            <strong><%= parcel.receiverContact %></strong>
+                        </div>
+
+                        <div>
+                            <span>Delivery Address</span>
+                            <strong><%= parcel.deliveryAddress %></strong>
+                        </div>
+                    </div>
+                </article>
+
+            </section>
+
+            <!-- Parcel specifications -->
+            <section class="dashboard-card staff-specification-card">
+                <div class="staff-card-heading">
+                    <h2>Parcel Specifications</h2>
+                </div>
+
+                <div class="staff-specification-grid">
+                    <div>
+                        <span>Weight</span>
+                        <strong><%= parcel.weight %> kg</strong>
+                    </div>
+
+                    <div>
+                        <span>Distance</span>
+                        <strong>
+                            <%= parcel.distance === null || parcel.distance === undefined
+                                ? 'Not specified'
+                                : parcel.distance + ' km' %>
+                        </strong>
+                    </div>
+
+                    <div>
+                        <span>Delivery Type</span>
+                        <strong><%= parcel.deliveryType.replace(/_/g, ' ') %></strong>
+                    </div>
+
+                    <div>
+                        <span>Delivery Charge</span>
+                        <strong>
+                            Rs. <%= Number(parcel.deliveryCharge).toFixed(2) %>
+                        </strong>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Status update -->
+            <section class="dashboard-card staff-status-update-card">
+                <div class="staff-card-heading">
+                    <div>
+                        <h2>Update Delivery Status</h2>
+                        <p>Select the next permitted status for this parcel.</p>
+                    </div>
+                </div>
+
+                <% if (permittedStatuses.length > 0) { %>
+
+                    <form
+                        id="staffStatusForm"
+                        data-parcel-id="<%= parcel.id %>"
+                        data-current-status="<%= parcel.currentStatus %>"
+                        action="/staff/parcels/<%= parcel.id %>/status"
+                        method="POST"
+                    >
+
+                        <div class="staff-status-form-grid">
+
+                            <div class="staff-form-group">
+                                <label for="nextStatus">New Delivery Status</label>
+
+                                <select
+                                    id="nextStatus"
+                                    name="status"
+                                    required
+                                >
+                                    <option value="">Select new status</option>
+
+                                    <% permittedStatuses.forEach(status => { %>
+                                        <option value="<%= status %>">
+                                            <%= status %>
+                                        </option>
+                                    <% }) %>
+                                </select>
+                            </div>
+
+                            <div class="staff-form-group">
+                                <label for="statusRemarks">Remarks (Optional)</label>
+
+                                <input
+                                    type="text"
+                                    id="statusRemarks"
+                                    name="remarks"
+                                    maxlength="500"
+                                    placeholder="Add delivery update remarks..."
+                                >
+                            </div>
+
+                        </div>
+
+                        <div
+                            class="staff-form-group staff-failure-reason-group"
+                            id="failureReasonGroup"
+                            hidden
+                        >
+                            <label for="failureReason">
+                                Failure Reason <span>*</span>
+                            </label>
+
+                            <textarea
+                                id="failureReason"
+                                name="failureReason"
+                                rows="3"
+                                maxlength="500"
+                                placeholder="Explain why the delivery failed..."
+                            ></textarea>
+
+                            <small>A failure reason is required for Delivery Failed.</small>
+                        </div>
+
+                        <div
+                            id="staffStatusMessage"
+                            class="detail-action-message"
+                            role="alert"
+                            aria-live="polite"
+                        ></div>
+
+                        <div class="staff-status-form-footer">
+                            <button
+                                type="submit"
+                                id="updateStatusButton"
+                                class="btn btn-primary"
+                            >
+                                Update Delivery Status
+                            </button>
+                        </div>
+
+                    </form>
+
+                <% } else { %>
+
+                    <div class="staff-status-complete">
+                        <strong>No Further Staff Updates Available</strong>
+                        <p>
+                            The current parcel status does not allow another
+                            delivery status update.
+                        </p>
+                    </div>
+
+                <% } %>
+            </section>
+
+            <!-- Shipment history -->
+            <section class="dashboard-card staff-history-card">
+                <div class="staff-card-heading">
+                    <div>
+                        <h2>Shipment History</h2>
+                        <p>Complete timeline of parcel status updates.</p>
+                    </div>
+
+                    <span class="staff-history-count">
+                        <%= shipmentHistory.length %> Updates
+                    </span>
+                </div>
+
+                <% if (shipmentHistory.length > 0) { %>
+
+                    <div class="staff-history-timeline">
+
+                        <% shipmentHistory.forEach(item => { %>
+                            <article class="staff-history-item">
+
+                                <div class="staff-history-marker"></div>
+
+                                <div class="staff-history-content">
+
+                                    <div class="staff-history-top">
+                                        <%- include('../partials/status-badge', {
+                                            status: item.status
+                                        }) %>
+
+                                        <time>
+                                            <%= new Date(item.updated_at).toLocaleString('en-GB') %>
+                                        </time>
+                                    </div>
+
+                                    <p>
+                                        <%= item.remarks || 'Status updated.' %>
+                                    </p>
+
+                                    <span class="staff-history-user">
+                                        Updated by: <%= item.updated_by_name || 'System' %>
+                                    </span>
+
+                                </div>
+                            </article>
+                        <% }) %>
+
+                    </div>
+
+                <% } else { %>
+
+                    <div class="staff-history-empty">
+                        No shipment history is available.
+                    </div>
+
+                <% } %>
+            </section>
+
+            <!-- Delivery attempt history -->
+            <section class="dashboard-card staff-attempt-history-card">
+                <div class="staff-card-heading">
+                    <div>
+                        <h2>Delivery Attempt History</h2>
+                        <p>Record of unsuccessful delivery attempts.</p>
+                    </div>
+
+                    <span class="staff-history-count">
+                        <%= deliveryAttempts.length %> Attempts
+                    </span>
+                </div>
+
+                <% if (deliveryAttempts.length > 0) { %>
+
+                    <div class="table-responsive">
+                        <table class="dashboard-table staff-attempts-table">
+                            <thead>
+                                <tr>
+                                    <th>Attempt</th>
+                                    <th>Delivery Staff</th>
+                                    <th>Date and Time</th>
+                                    <th>Failure Reason</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <% deliveryAttempts.forEach(attempt => { %>
+                                    <tr>
+                                        <td>
+                                            <strong>#<%= attempt.attempt_no %></strong>
+                                        </td>
+
+                                        <td><%= attempt.staff_name || 'N/A' %></td>
+
+                                        <td>
+                                            <%= new Date(attempt.attempt_time).toLocaleString('en-GB') %>
+                                        </td>
+
+                                        <td>
+                                            <span class="staff-failure-text">
+                                                <%= attempt.failure_reason %>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+
+                <% } else { %>
+
+                    <div class="staff-history-empty">
+                        No failed delivery attempts have been recorded for this parcel.
+                    </div>
+
+                <% } %>
+            </section>
+
+        </div>
+    </main>
+
+    <script src="/js/dashboard.js"></script>
+    <script src="/js/staff-delivery-details.js"></script>
+</body>
+</html>
