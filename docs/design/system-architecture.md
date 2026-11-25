@@ -14,7 +14,7 @@ Technology is based on the approved proposal and SRS: Node.js, Express.js, EJS, 
 
 ## 2. High-level component diagram
 
-\`\`\`mermaid
+```mermaid
 flowchart TB
     ADM[Administrator / Courier Clerk]
     STAFF[Delivery Staff]
@@ -70,7 +70,7 @@ flowchart TB
     MODEL --> REPO --> DB
     CTRL --> STAFF_UI
     CTRL --> TRACK_UI
-\`\`\`
+```
 
 The diagram shows logical responsibilities. The concrete source modules can be introduced incrementally without moving or replacing the frontend pages being developed by the UI team member.
 
@@ -125,7 +125,7 @@ SRS FR-20 lists the following statuses:
 
 Conceptual flow:
 
-\`\`\`text
+```text
 Booked -> Assigned -> Dispatched -> Out for Delivery
                                       |             |
                                       |             +-> Delivered
@@ -137,7 +137,7 @@ Booked -> Assigned -> Dispatched -> Out for Delivery
                                                +-> Return Initiated
                                                         -> Return in Transit
                                                         -> Returned to Sender
-\`\`\`
+```
 
 The SRS does not define a complete transition matrix or a numeric retry limit. Those rules must be agreed with the courier/business assumptions and documented before being encoded in the status service.
 
@@ -175,4 +175,4 @@ Important SRS constraints:
 
 ## 9. Known inconsistency to resolve
 
-The existing \`docs/BACKEND.md\` draft currently describes a shortened status flow and includes \`CANCELLED\`, which is not one of the nine statuses in SRS FR-20. This architecture document follows the submitted SRS. Reconcile the backend note and any existing tests with the SRS, or formally revise/version the SRS before adding or changing statuses.
+The existing `docs/BACKEND.md` draft currently describes a shortened status flow and includes `CANCELLED`, which is not one of the nine statuses in SRS FR-20. This architecture document follows the submitted SRS. Reconcile the backend note and any existing tests with the SRS, or formally revise/version the SRS before adding or changing statuses.
