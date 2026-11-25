@@ -11,11 +11,11 @@ SRS section 7.3 explicitly requires storage for:
 
 This document defines a **logical data model** for those items. It is not a claim that the physical MySQL schema has already been implemented. Exact column sizes, enum implementation, address details, pricing policy, and retry policy should be agreed before finalizing the schema.
 
-Customers are public tracking users in the SRS; customer account registration is listed as a future enhancement. Therefore, the proposed \`users\` table represents staff accounts, not mandatory customer accounts.
+Customers are public tracking users in the SRS; customer account registration is listed as a future enhancement. Therefore, the proposed `users` table represents staff accounts, not mandatory customer accounts.
 
 ## 2. Entity relationship diagram
 
-\`\`\`mermaid
+```mermaid
 erDiagram
     USERS ||--o{ PARCELS : registers
     USERS ||--o{ PARCEL_ASSIGNMENTS : assigned_staff
@@ -83,7 +83,7 @@ erDiagram
       VARCHAR failure_reason
       DATETIME attempted_at
     }
-\`\`\`
+```
 
 ## 3. Entity descriptions
 
@@ -109,14 +109,14 @@ erDiagram
 These are implementation recommendations derived from the SRS integrity requirements:
 
 - Primary key for each entity.
-- Unique constraint on \`users.email\`.
-- Unique constraint on \`parcels.tracking_number\` (BR-01, NFR-11 and NFR-22).
+- Unique constraint on `users.email`.
+- Unique constraint on `parcels.tracking_number` (BR-01, NFR-11 and NFR-22).
 - Foreign keys for every relationship.
-- Enforce \`weight_kg > 0\` (FR-14 / BR-03) both in application validation and, where supported, a database check.
-- Index \`parcels.current_status\` for operational work queues.
-- Index \`shipment_history(parcel_id, changed_at)\` for chronological tracking.
-- Index \`delivery_attempts(parcel_id, attempt_number)\`.
-- Index \`parcel_assignments(delivery_staff_id, is_current)\` for a staff member's assigned parcels.
+- Enforce `weight_kg > 0` (FR-14 / BR-03) both in application validation and, where supported, a database check.
+- Index `parcels.current_status` for operational work queues.
+- Index `shipment_history(parcel_id, changed_at)` for chronological tracking.
+- Index `delivery_attempts(parcel_id, attempt_number)`.
+- Index `parcel_assignments(delivery_staff_id, is_current)` for a staff member's assigned parcels.
 
 The SRS does not dictate the exact technique for enforcing at most one active assignment. Select a transaction-safe approach compatible with the deployed MySQL version.
 
