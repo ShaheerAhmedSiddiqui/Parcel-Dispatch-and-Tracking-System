@@ -1,0 +1,220 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> | ParcelTrack</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+</head>
+
+<body class="dashboard-body">
+
+    <%- include('../partials/dashboard-header') %>
+
+    <%- include('../partials/admin-sidebar') %>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="dashboard-main">
+        <div class="dashboard-content">
+
+            <!-- Page heading -->
+            <section class="page-heading">
+                <div>
+                    <h1>Dashboard Overview</h1>
+                    <p>Monitor parcel registrations and delivery operations.</p>
+                </div>
+
+                <a href="/parcels/new" class="btn btn-primary">
+                    <span>＋</span>
+                    Register New Parcel
+                </a>
+            </section>
+
+            <!-- Statistics -->
+            <section class="stats-grid">
+
+                <article class="stat-card">
+                    <div class="stat-card-top">
+                        <span class="stat-label">Total Parcels</span>
+                        <span class="stat-icon stat-icon-orange">▤</span>
+                    </div>
+
+                    <h2><%= stats.totalParcels %></h2>
+                    <p>All registered parcels</p>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-card-top">
+                        <span class="stat-label">Booked Parcels</span>
+                        <span class="stat-icon stat-icon-yellow">◷</span>
+                    </div>
+
+                    <h2><%= stats.bookedParcels %></h2>
+                    <p>Awaiting staff assignment</p>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-card-top">
+                        <span class="stat-label">In Transit</span>
+                        <span class="stat-icon stat-icon-blue">➜</span>
+                    </div>
+
+                    <h2><%= stats.inTransitParcels %></h2>
+                    <p>Currently moving through delivery</p>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-card-top">
+                        <span class="stat-label">Delivered</span>
+                        <span class="stat-icon stat-icon-green">✓</span>
+                    </div>
+
+                    <h2><%= stats.deliveredParcels %></h2>
+                    <p>Successfully delivered parcels</p>
+                </article>
+
+            </section>
+
+            <!-- Recent parcels -->
+            <section class="dashboard-card recent-parcels-card">
+
+                <div class="section-title-row">
+                    <div>
+                        <h2>Recent Parcels</h2>
+                        <p>Latest parcel registrations in the system.</p>
+                    </div>
+
+                    <a href="/parcels" class="view-all-link">
+                        View All Parcels
+                        <span>→</span>
+                    </a>
+                </div>
+
+                <% if (recentParcels.length > 0) { %>
+
+                    <div class="table-responsive">
+                        <table class="dashboard-table">
+                            <thead>
+                                <tr>
+                                    <th>Tracking Number</th>
+                                    <th>Receiver</th>
+                                    <th>Delivery Type</th>
+                                    <th>Registration Date</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <% recentParcels.forEach(parcel => { %>
+                                    <tr>
+                                        <td>
+                                            <strong class="tracking-number">
+                                                <%= parcel.trackingNumber %>
+                                            </strong>
+                                        </td>
+
+                                        <td><%= parcel.receiverName %></td>
+
+                                        <td>
+                                            <span class="delivery-type">
+                                                <%= parcel.deliveryType.replace('_', ' ') %>
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <%= new Date(parcel.registeredAt).toLocaleDateString('en-GB', {
+                                                day: '2-digit',
+                                                month: 'short',
+                                                year: 'numeric'
+                                            }) %>
+                                        </td>
+
+                                        <td>
+                                            <%- include('../partials/status-badge', {
+                                                status: parcel.currentStatus
+                                            }) %>
+                                        </td>
+
+                                        <td>
+                                            <a
+                                                href="/parcels/<%= parcel.id %>"
+                                                class="table-action"
+                                            >
+                                                View Details
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+
+                <% } else { %>
+
+                    <div class="empty-state">
+                        <div class="empty-state-icon">▤</div>
+                        <h3>No parcels registered yet</h3>
+                        <p>Register your first parcel to see it here.</p>
+
+                        <a href="/parcels/new" class="btn btn-primary">
+                            Register Parcel
+                        </a>
+                    </div>
+
+                <% } %>
+
+            </section>
+
+            <!-- Quick actions -->
+            <section class="quick-actions-section">
+                <div class="section-title-row">
+                    <div>
+                        <h2>Quick Actions</h2>
+                        <p>Common tasks to manage your delivery operations.</p>
+                    </div>
+                </div>
+
+                <div class="quick-actions-grid">
+
+                    <a href="/parcels/new" class="quick-action-card">
+                        <span class="quick-action-icon orange-action">＋</span>
+                        <div>
+                            <h3>Register Parcel</h3>
+                            <p>Create a new parcel registration.</p>
+                        </div>
+                        <span class="quick-action-arrow">→</span>
+                    </a>
+
+                    <a href="/parcels" class="quick-action-card">
+                        <span class="quick-action-icon blue-action">▤</span>
+                        <div>
+                            <h3>Manage Parcels</h3>
+                            <p>Search, filter, and manage parcels.</p>
+                        </div>
+                        <span class="quick-action-arrow">→</span>
+                    </a>
+
+                    <a href="/track" class="quick-action-card">
+                        <span class="quick-action-icon green-action">♙</span>
+                        <div>
+                            <h3>Track a Parcel</h3>
+                            <p>Open the public parcel tracking page.</p>
+                        </div>
+                        <span class="quick-action-arrow">→</span>
+                    </a>
+
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script src="/js/dashboard.js"></script>
+</body>
+</html>

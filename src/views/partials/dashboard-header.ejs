@@ -1,0 +1,42 @@
+<header class="dashboard-header">
+    <div class="dashboard-header-left">
+        <button
+            type="button"
+            class="sidebar-toggle"
+            id="sidebarToggle"
+            aria-label="Toggle navigation"
+            aria-expanded="false"
+        >
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <a href="<%= currentUser && currentUser.role === 'ADMIN' ? '/admin/dashboard' : '/staff' %>" class="brand dashboard-brand">
+            <span class="brand-mark">P</span>
+            <span class="brand-name">Parcel<span>Track</span></span>
+        </a>
+    </div>
+
+    <div class="dashboard-header-right">
+        <div class="dashboard-user">
+            <div class="user-avatar">
+                <%= (currentUser?.fullName || 'U').charAt(0).toUpperCase() %>
+            </div>
+
+            <div class="user-info">
+                <strong><%= currentUser?.fullName || 'User' %></strong>
+                <span>
+                    <%= currentUser?.role === 'ADMIN' ? 'Administrator' : 'Delivery Staff' %>
+                </span>
+            </div>
+        </div>
+
+        <form action="/logout" method="POST">
+            <button type="submit" class="logout-button">
+                <span aria-hidden="true">↪</span>
+                <span>Logout</span>
+            </button>
+        </form>
+    </div>
+</header>

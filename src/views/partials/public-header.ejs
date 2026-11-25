@@ -1,0 +1,49 @@
+
+<header class="public-header">
+  <div class="container">
+    <nav class="public-nav" aria-label="Main navigation">
+
+      <a href="/" class="brand" aria-label="ParcelTrack home">
+        <span class="brand-mark" aria-hidden="true">P</span>
+        <span class="brand-name">Parcel<span>Track</span></span>
+      </a>
+
+      <button
+        type="button"
+        class="public-nav-toggle"
+        id="publicNavToggle"
+        aria-label="Open navigation menu"
+        aria-expanded="false"
+        aria-controls="publicNavLinks"
+      >
+        <span aria-hidden="true">&#9776;</span>
+      </button>
+
+      <div class="public-nav-links" id="publicNavLinks">
+        <a href="/" class="<%= typeof activePage !== 'undefined' && activePage === 'home' ? 'active' : '' %>">
+          Home
+        </a>
+
+        <a href="/track" class="<%= typeof activePage !== 'undefined' && activePage === 'tracking' ? 'active' : '' %>">
+          Track Parcel
+        </a>
+
+        <a href="/about" class="<%= activePage === 'about' ? 'active' : '' %>">
+          About
+        </a>
+      </div>
+
+      <div class="public-nav-actions">
+        <a href="/login" class="btn btn-primary">
+          Staff Login
+        </a>
+      </div>
+
+    </nav>
+  </div>
+</header>
+
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/public.css">
+<link rel="stylesheet" href="/css/responsive.css">
+<script src="/js/main.js" defer></script>

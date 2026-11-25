@@ -1,3 +1,4 @@
+
 // src/app.js
 // Express application. Exported WITHOUT calling listen() so that
 // Supertest can test routes without opening a real port.
@@ -13,6 +14,7 @@ const authRoutes = require('./routes/auth');
 const parcelRoutes = require('./routes/parcels');
 const staffRoutes = require('./routes/staff');
 const trackingRoutes = require('./routes/tracking');
+const adminRoutes = require('./routes/admin');
 
 const app = express();
 
@@ -25,6 +27,7 @@ app.use(express.urlencoded({ extended: false })); // HTML form bodies
 app.use(express.json());                          // JSON bodies (API/tests)
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
+// ---------- Session middleware ----------
 app.use(
   session({
     secret: process.env.SESSION_SECRET || 'dev-only-secret-change-me',
@@ -51,13 +54,25 @@ app.get('/health', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  res.render('home', { title: 'Parcel Dispatch and Tracking System' });
+  res.render('home', {
+    title: 'Parcel Dispatch and Tracking System',
+  });
 });
 
-app.use('/', authRoutes);                // /login, /logout
-app.use('/track', trackingRoutes);       // public customer tracking
-app.use('/parcels', parcelRoutes);       // ADMIN (and STAFF where permitted)
-app.use('/staff', staffRoutes);          // STAFF delivery workflow
+// Authentication routes: /login, /logout
+app.use('/', authRoutes);
+
+// Public customer tracking
+app.use('/track', trackingRoutes);
+
+// Admin routes: /admin/dashboard
+app.use('/admin', adminRoutes);
+
+// Parcel management routes
+app.use('/parcels', parcelRoutes);
+
+// Staff delivery workflow routes
+app.use('/staff', staffRoutes);
 
 // ---------- 404 handler ----------
 app.use((req, res) => {
@@ -72,7 +87,10 @@ app.use((req, res) => {
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   const status = err.status || 500;
-  if (status >= 500) console.error(err);
+
+  if (status >= 500) {
+    console.error(err);
+  }
 
   const message =
     status >= 500 && process.env.NODE_ENV === 'production'
@@ -81,8 +99,11 @@ app.use((err, req, res, next) => {
 
   // JSON for API clients / tests, HTML page for browsers
   if (req.accepts(['html', 'json']) === 'json') {
-    return res.status(status).json({ error: message });
+    return res.status(status).json({
+      error: message,
+    });
   }
+
   return res.status(status).render('error', {
     title: 'Error',
     message,

@@ -1,0 +1,46 @@
+<aside class="dashboard-sidebar" id="dashboardSidebar">
+    <div class="sidebar-section">
+        <p class="sidebar-label">WORKSPACE</p>
+
+        <nav class="sidebar-nav">
+            <a
+                href="/admin/dashboard"
+                class="sidebar-link <%= activePage === 'dashboard' ? 'active' : '' %>"
+            >
+                <span class="sidebar-icon">▦</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a
+                href="/parcels"
+                class="sidebar-link <%= activePage === 'parcels' ? 'active' : '' %>"
+            >
+                <span class="sidebar-icon">▤</span>
+                <span>All Parcels</span>
+            </a>
+
+            <a
+                href="/parcels/new"
+                class="sidebar-link <%= activePage === 'register-parcel' ? 'active' : '' %>"
+            >
+                <span class="sidebar-icon">＋</span>
+                <span>Register Parcel</span>
+            </a>
+        </nav>
+    </div>
+
+    <div class="sidebar-bottom">
+        <div class="sidebar-help">
+            <div class="help-icon">?</div>
+            <div>
+                <strong>Need assistance?</strong>
+                <p>Manage your parcels with ParcelTrack.</p>
+            </div>
+        </div>
+
+        <a href="/" class="sidebar-public-link">
+            <span>↗</span>
+            View Public Website
+        </a>
+    </div>
+</aside>

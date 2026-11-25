@@ -6,9 +6,12 @@
     "start": "node src/server.js",
     "test": "jest --coverage"
   },
-  "jest": { "testEnvironment": "node" },
+  "jest": {
+    "testEnvironment": "node"
+  },
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.3",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
