@@ -690,3 +690,247 @@ body.dashboard-body {
         padding: 14px;
     }
 }
+
+
+/* =========================================
+   Staff Dashboard - S-01
+   ========================================= */
+
+.staff-page-heading {
+    margin-bottom: 27px;
+}
+
+.staff-deliveries-card {
+    padding: 22px;
+}
+
+.staff-deliveries-heading {
+    margin-bottom: 22px;
+}
+
+.staff-record-count {
+    padding: 8px 12px;
+    border-radius: 20px;
+    color: #D95130;
+    background: #FFF0EB;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Search and filters */
+
+.staff-filter-form {
+    display: grid;
+    grid-template-columns: minmax(220px, 1.6fr) minmax(180px, 0.8fr) auto;
+    align-items: end;
+    gap: 15px;
+    margin-bottom: 25px;
+    padding: 18px;
+    border: 1px solid #EEEEEE;
+    border-radius: 9px;
+    background: #FCFCFC;
+}
+
+.staff-search-field,
+.staff-status-field {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.staff-search-field label,
+.staff-status-field label {
+    color: #404040;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.staff-search-field input,
+.staff-status-field select {
+    width: 100%;
+    min-width: 0;
+    height: 43px;
+    padding: 0 12px;
+    border: 1px solid #DDDDDD;
+    border-radius: 8px;
+    outline: none;
+    color: #404040;
+    background: white;
+    font-family: inherit;
+    font-size: 12px;
+}
+
+.staff-search-field input:focus,
+.staff-status-field select:focus {
+    border-color: var(--color-orange);
+    box-shadow: 0 0 0 3px rgba(255, 110, 73, 0.10);
+}
+
+.staff-filter-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.staff-filter-actions .btn {
+    min-height: 43px;
+    padding: 0 15px;
+    white-space: nowrap;
+    font-size: 11px;
+}
+
+/* Delivery table */
+
+.staff-table-wrapper {
+    margin-top: 5px;
+}
+
+.staff-deliveries-table {
+    min-width: 950px;
+}
+
+.staff-deliveries-table td {
+    vertical-align: middle;
+}
+
+.staff-receiver-name {
+    display: block;
+    color: #404040;
+    font-weight: 600;
+}
+
+.staff-receiver-contact {
+    display: block;
+    margin-top: 4px;
+    color: #999999;
+    font-size: 10px;
+}
+
+.staff-address {
+    display: block;
+    max-width: 210px;
+    overflow: hidden;
+    color: #666666;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Mobile delivery cards */
+
+.staff-mobile-deliveries {
+    display: none;
+}
+
+.staff-mobile-card {
+    padding: 16px;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    background: white;
+}
+
+.staff-mobile-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding-bottom: 13px;
+    border-bottom: 1px solid #EEEEEE;
+}
+
+.staff-mobile-card-info {
+    display: grid;
+    gap: 13px;
+    padding: 15px 0;
+}
+
+.staff-mobile-card-info div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.staff-mobile-card-info span {
+    color: #999999;
+    font-size: 10px;
+}
+
+.staff-mobile-card-info strong {
+    color: #404040;
+    font-size: 12px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.staff-mobile-action {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-top: 3px;
+}
+
+/* Empty state */
+
+.staff-empty-state {
+    padding: 55px 15px;
+}
+
+/* Responsive staff dashboard */
+
+@media (max-width: 1100px) {
+    .staff-filter-form {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .staff-filter-actions {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 700px) {
+    .staff-deliveries-card {
+        padding: 16px;
+    }
+
+    .staff-filter-form {
+        grid-template-columns: 1fr;
+        padding: 14px;
+    }
+
+    .staff-filter-actions {
+        grid-column: auto;
+    }
+
+    .staff-filter-actions .btn {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .staff-table-wrapper {
+        display: none;
+    }
+
+    .staff-mobile-deliveries {
+        display: grid;
+        gap: 12px;
+    }
+
+    .staff-deliveries-heading {
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 450px) {
+    .staff-filter-actions {
+        flex-direction: column;
+    }
+
+    .staff-filter-actions .btn {
+        width: 100%;
+    }
+
+    .staff-record-count {
+        font-size: 10px;
+    }
+}

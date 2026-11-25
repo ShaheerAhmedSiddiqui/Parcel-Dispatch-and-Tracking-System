@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
       trackingError.textContent = '';
 
       window.location.href =
-        '/track/' + encodeURIComponent(trackingNumber);
+         '/track?trackingNumber=' + encodeURIComponent(trackingNumber);
     });
 
     trackingInput.addEventListener('input', () => {

@@ -4,59 +4,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title><%= title %> | ParcelTrack</title>
+
     <link rel="stylesheet" href="/css/style.css">
+
     <style>
         .login-page {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 24px;
+            padding: 25px;
             background: #f7f7f7;
         }
 
         .login-card {
             width: 100%;
-            max-width: 420px;
-            padding: 36px;
+            max-width: 430px;
+            padding: 38px;
             background: #fff;
+            border: 1px solid #eee;
             border-radius: 12px;
-            box-shadow: 0 8px 30px rgba(0,0,0,.07);
+            box-shadow: 0 8px 30px rgba(0,0,0,.06);
+        }
+
+        .login-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 11px;
+            margin-bottom: 32px;
+            text-decoration: none;
+        }
+
+        .login-brand-icon {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ff6e49;
+            color: #fff;
+            border-radius: 10px;
+            font-size: 23px;
+            font-weight: 700;
+        }
+
+        .login-brand-name {
+            font-size: 23px;
+            font-weight: 700;
+            color: #171717;
+        }
+
+        .login-brand-name span {
+            color: #ff6e49;
         }
 
         .login-card h1 {
-            margin-bottom: 8px;
+            text-align: center;
+            margin-bottom: 9px;
             font-size: 28px;
+            color: #171717;
         }
 
         .login-subtitle {
+            text-align: center;
             color: #777;
-            margin-bottom: 28px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            line-height: 1.6;
         }
 
         .login-field {
-            margin-bottom: 20px;
+            margin-bottom: 21px;
         }
 
         .login-field label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 9px;
             font-weight: 600;
+            font-size: 14px;
+            color: #333;
         }
 
         .login-field input {
             width: 100%;
-            padding: 13px;
+            box-sizing: border-box;
+            padding: 14px;
             border: 1px solid #ddd;
             border-radius: 8px;
             font-size: 15px;
-            box-sizing: border-box;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .login-field input:focus {
+            border-color: #ff6e49;
+            box-shadow: 0 0 0 3px rgba(255,110,73,.12);
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            padding-right: 75px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            color: #ff6e49;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 5px;
         }
 
         .login-button {
             width: 100%;
-            padding: 14px;
+            padding: 15px;
+            margin-top: 5px;
             border: none;
             border-radius: 8px;
             background: #ff6e49;
@@ -64,22 +137,52 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
+            transition: background .2s;
+        }
+
+        .login-button:hover {
+            background: #e85d3b;
         }
 
         .login-error {
-            padding: 12px;
-            margin-bottom: 20px;
+            padding: 13px 15px;
+            margin-bottom: 22px;
+            border: 1px solid #ffd5cc;
             border-radius: 8px;
             background: #fff0ed;
             color: #b42318;
+            font-size: 14px;
+            line-height: 1.5;
         }
 
         .login-back {
             display: block;
-            margin-top: 22px;
+            margin-top: 25px;
             text-align: center;
-            color: #555;
+            color: #666;
+            font-size: 14px;
             text-decoration: none;
+        }
+
+        .login-back:hover {
+            color: #ff6e49;
+        }
+
+        .login-note {
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+            margin-top: 25px;
+        }
+
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 28px 22px;
+            }
+
+            .login-card h1 {
+                font-size: 25px;
+            }
         }
     </style>
 </head>
@@ -87,14 +190,23 @@
 <body>
 
     <main class="login-page">
+
         <section class="login-card">
 
+            <a href="/" class="login-brand">
+                <span class="login-brand-icon">P</span>
+                <span class="login-brand-name">
+                    Parcel<span>Track</span>
+                </span>
+            </a>
+
             <h1>Welcome Back</h1>
+
             <p class="login-subtitle">
                 Sign in to your ParcelTrack staff account.
             </p>
 
-            <% if (errorMessage) { %>
+            <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
                 <div class="login-error" role="alert">
                     <%= errorMessage %>
                 </div>
@@ -104,6 +216,7 @@
 
                 <div class="login-field">
                     <label for="email">Email Address</label>
+
                     <input
                         type="email"
                         id="email"
@@ -116,14 +229,26 @@
 
                 <div class="login-field">
                     <label for="password">Password</label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        placeholder="Enter your password"
-                        autocomplete="current-password"
-                        required
-                    >
+
+                    <div class="password-wrapper">
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            id="togglePassword"
+                            aria-label="Show password"
+                        >
+                            Show
+                        </button>
+                    </div>
                 </div>
 
                 <button type="submit" class="login-button">
@@ -133,11 +258,18 @@
             </form>
 
             <a href="/" class="login-back">
-                ← Back to Home
+                &larr; Back to Home
             </a>
 
+            <p class="login-note">
+                Authorized administrative and delivery staff only.
+            </p>
+
         </section>
+
     </main>
+
+    <script src="/js/auth.js" defer></script>
 
 </body>
 </html>

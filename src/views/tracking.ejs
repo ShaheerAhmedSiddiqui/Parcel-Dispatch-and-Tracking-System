@@ -1,111 +1,137 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title><%= title %> | ParcelTrack</title>
+    <title>
+        <%= title %> | ParcelTrack
+    </title>
 
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/public.css">
+    <link rel="stylesheet" href="/css/responsive.css">
 
     <style>
         .tracking-page {
             min-height: 75vh;
-            padding: 55px 20px;
+            padding: 65px 20px 80px;
             background: #f8f8f8;
         }
 
         .tracking-container {
             max-width: 850px;
-            margin: auto;
+            margin: 0 auto;
         }
 
         .tracking-heading {
             text-align: center;
-            margin-bottom: 32px;
+            margin-bottom: 35px;
         }
 
         .tracking-heading h1 {
-            font-size: 32px;
-            margin-bottom: 10px;
+            font-size: 34px;
+            font-weight: 700;
+            color: #171717;
+            margin-bottom: 12px;
         }
 
         .tracking-heading p {
             color: #777;
+            font-size: 15px;
         }
 
         .tracking-search {
             display: flex;
             gap: 12px;
             padding: 18px;
-            background: white;
+            background: #fff;
+            border: 1px solid #eee;
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,.05);
-            margin-bottom: 28px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .04);
+            margin-bottom: 25px;
         }
 
         .tracking-search input {
             flex: 1;
             min-width: 0;
-            padding: 14px;
+            padding: 15px;
             border: 1px solid #ddd;
             border-radius: 8px;
             font-size: 15px;
+            outline: none;
+        }
+
+        .tracking-search input:focus {
+            border-color: #ff6e49;
+            box-shadow: 0 0 0 3px rgba(255, 110, 73, .12);
         }
 
         .tracking-search button {
-            padding: 14px 24px;
+            padding: 14px 25px;
             border: none;
             border-radius: 8px;
             background: #ff6e49;
             color: white;
             font-weight: 600;
             cursor: pointer;
+            transition: background .2s;
+        }
+
+        .tracking-search button:hover {
+            background: #e85d3b;
         }
 
         .tracking-error {
-            padding: 15px;
+            padding: 15px 18px;
             margin-bottom: 25px;
             background: #fff0ed;
             color: #b42318;
-            border-radius: 8px;
+            border: 1px solid #ffd5cc;
+            border-radius: 9px;
         }
 
         .tracking-result {
-            padding: 28px;
+            padding: 30px;
             background: white;
+            border: 1px solid #eee;
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .04);
         }
 
         .tracking-result h2 {
-            font-size: 21px;
-            margin-bottom: 8px;
+            font-size: 22px;
+            color: #171717;
+            margin-bottom: 9px;
         }
 
         .tracking-number {
             color: #777;
-            margin-bottom: 22px;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .tracking-number strong {
+            color: #171717;
         }
 
         .current-status {
-            padding: 18px;
+            padding: 20px;
             background: #fff4ef;
+            border: 1px solid #ffe0d6;
             border-radius: 9px;
-            margin-bottom: 30px;
+            margin-bottom: 32px;
         }
 
         .current-status small {
             display: block;
             color: #777;
-            margin-bottom: 7px;
+            margin-bottom: 8px;
         }
 
         .current-status strong {
             color: #e65d39;
-            font-size: 20px;
+            font-size: 21px;
         }
 
         .tracking-timeline {
@@ -113,18 +139,21 @@
         }
 
         .tracking-timeline h3 {
-            margin-bottom: 24px;
+            font-size: 18px;
+            margin-bottom: 25px;
+            color: #171717;
         }
 
         .timeline-item {
             position: relative;
-            padding: 0 0 25px 32px;
+            padding: 0 0 27px 32px;
             border-left: 2px solid #e5e5e5;
             margin-left: 8px;
         }
 
         .timeline-item:last-child {
             border-left-color: transparent;
+            padding-bottom: 0;
         }
 
         .timeline-dot {
@@ -146,7 +175,9 @@
 
         .timeline-item strong {
             display: block;
-            margin-bottom: 6px;
+            margin-bottom: 7px;
+            color: #171717;
+            font-size: 15px;
         }
 
         .timeline-item time {
@@ -155,14 +186,25 @@
         }
 
         .tracking-footer-info {
-            margin-top: 25px;
+            margin-top: 28px;
+            padding-top: 18px;
+            border-top: 1px solid #eee;
             color: #888;
             font-size: 13px;
         }
 
         @media (max-width: 550px) {
+            .tracking-page {
+                padding: 40px 15px 55px;
+            }
+
+            .tracking-heading h1 {
+                font-size: 27px;
+            }
+
             .tracking-search {
                 flex-direction: column;
+                padding: 14px;
             }
 
             .tracking-search button {
@@ -170,11 +212,7 @@
             }
 
             .tracking-result {
-                padding: 20px;
-            }
-
-            .tracking-heading h1 {
-                font-size: 26px;
+                padding: 21px;
             }
         }
     </style>
@@ -182,109 +220,91 @@
 
 <body>
 
-    <header style="background:#fff;padding:18px 6%;border-bottom:1px solid #eee;">
-        <a href="/" style="font-size:22px;font-weight:700;color:#171717;text-decoration:none;">
-            Parcel<span style="color:#ff6e49;">Track</span>
-        </a>
+    <%- include('partials/public-header', { activePage: 'tracking' }) %>
 
-        <a href="/login" style="float:right;color:#555;text-decoration:none;">
-            Staff Login
-        </a>
-    </header>
+        <main class="tracking-page">
+            <div class="tracking-container">
 
-    <main class="tracking-page">
-
-        <div class="tracking-container">
-
-            <div class="tracking-heading">
-                <h1>Track Your Parcel</h1>
-                <p>Enter your tracking number to see the latest shipment updates.</p>
-            </div>
-
-            <form action="/track" method="GET" class="tracking-search">
-
-                <input
-                    type="text"
-                    name="trackingNumber"
-                    placeholder="Enter tracking number (e.g. PT-000001)"
-                    value="<%= trackingNumber %>"
-                    maxlength="25"
-                    required
-                >
-
-                <button type="submit">
-                    Track Parcel
-                </button>
-
-            </form>
-
-            <% if (errorMessage) { %>
-
-                <div class="tracking-error" role="alert">
-                    <%= errorMessage %>
+                <div class="tracking-heading">
+                    <h1>Track Your Parcel</h1>
+                    <p>
+                        Enter your tracking number to see the latest shipment updates.
+                    </p>
                 </div>
 
-            <% } %>
+                <form action="/track" method="GET" class="tracking-search">
+                    <input type="text" name="trackingNumber" placeholder="Enter tracking number (e.g. PT-000001)"
+                        value="<%= trackingNumber %>" maxlength="25" required>
 
-            <% if (parcel) { %>
+                    <button type="submit">
+                        Track Parcel
+                    </button>
+                </form>
 
-                <section class="tracking-result">
-
-                    <h2>Shipment Details</h2>
-
-                    <p class="tracking-number">
-                        Tracking Number: <strong><%= parcel.trackingNumber %></strong>
-                    </p>
-
-                    <div class="current-status">
-
-                        <small>Current Shipment Status</small>
-
-                        <strong><%= parcel.currentStatus %></strong>
-
+                <% if (errorMessage) { %>
+                    <div class="tracking-error" role="alert">
+                        <%= errorMessage %>
                     </div>
+                    <% } %>
 
-                    <div class="tracking-timeline">
+                        <% if (parcel) { %>
+                            <section class="tracking-result">
 
-                        <h3>Shipment History</h3>
+                                <h2>Shipment Details</h2>
 
-                        <% if (shipmentHistory.length > 0) { %>
+                                <p class="tracking-number">
+                                    Tracking Number:
+                                    <strong>
+                                        <%= parcel.trackingNumber %>
+                                    </strong>
+                                </p>
 
-                            <% shipmentHistory.forEach((record, index) => { %>
-
-                                <div class="timeline-item <%= index === shipmentHistory.length - 1 ? 'latest' : '' %>">
-
-                                    <span class="timeline-dot"></span>
-
-                                    <strong><%= record.status %></strong>
-
-                                    <time>
-                                        <%= new Date(record.updatedAt).toLocaleString() %>
-                                    </time>
-
+                                <div class="current-status">
+                                    <small>Current Shipment Status</small>
+                                    <strong>
+                                        <%= parcel.currentStatus %>
+                                    </strong>
                                 </div>
 
-                            <% }) %>
+                                <div class="tracking-timeline">
+                                    <h3>Shipment History</h3>
 
-                        <% } else { %>
+                                    <% if (shipmentHistory.length > 0) { %>
 
-                            <p>No shipment history is available.</p>
+                                        <% shipmentHistory.forEach((record, index)=> { %>
+                                            <div
+                                                class="timeline-item <%= index === shipmentHistory.length - 1 ? 'latest' : '' %>">
 
-                        <% } %>
+                                                <span class="timeline-dot"></span>
 
-                    </div>
+                                                <strong>
+                                                    <%= record.status %>
+                                                </strong>
 
-                    <p class="tracking-footer-info">
-                        Shipment history is displayed in chronological order.
-                    </p>
+                                                <time>
+                                                    <%= new Date(record.updatedAt).toLocaleString() %>
+                                                </time>
 
-                </section>
+                                            </div>
+                                            <% }) %>
 
-            <% } %>
+                                                <% } else { %>
+                                                    <p>No shipment history is available.</p>
+                                                    <% } %>
+                                </div>
 
-        </div>
+                                <p class="tracking-footer-info">
+                                    Shipment history is displayed in chronological order.
+                                </p>
 
-    </main>
+                            </section>
+                            <% } %>
+
+            </div>
+        </main>
+
+        <%- include('partials/footer') %>
 
 </body>
+
 </html>

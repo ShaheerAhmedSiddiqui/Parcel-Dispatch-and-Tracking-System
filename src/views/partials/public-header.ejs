@@ -28,7 +28,7 @@
           Track Parcel
         </a>
 
-        <a href="/about" class="<%= activePage === 'about' ? 'active' : '' %>">
+        <a href="/about" class="<%= typeof activePage !== 'undefined' && activePage === 'about' ? 'active' : '' %>">
           About
         </a>
       </div>
