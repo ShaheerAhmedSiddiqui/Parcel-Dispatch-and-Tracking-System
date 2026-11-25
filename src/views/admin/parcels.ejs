@@ -1,0 +1,408 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> | ParcelTrack</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/tables.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+</head>
+
+<body class="dashboard-body">
+
+    <%- include('../partials/dashboard-header') %>
+    <%- include('../partials/admin-sidebar') %>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="dashboard-main">
+        <div class="dashboard-content">
+
+            <!-- Page heading -->
+            <section class="page-heading">
+                <div>
+                    <h1>All Parcels</h1>
+                    <p>Search, view, and manage all registered parcels.</p>
+                </div>
+
+                <a href="/parcels/new" class="btn btn-primary">
+                    + Register New Parcel
+                </a>
+            </section>
+
+            <!-- Search and filters -->
+            <section class="parcel-filter-card">
+
+                <form action="/parcels" method="GET" id="parcelFilterForm">
+
+                    <div class="parcel-search-row">
+                        <div class="parcel-search-input">
+                            <label for="search">Search Parcels</label>
+                            <input
+                                type="search"
+                                id="search"
+                                name="search"
+                                value="<%= filters.search %>"
+                                placeholder="Tracking number, sender or receiver..."
+                            >
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            Search
+                        </button>
+
+                        <a href="/parcels" class="btn btn-outline">
+                            Clear Filters
+                        </a>
+                    </div>
+
+                    <div class="parcel-filter-grid">
+
+                        <div class="form-group">
+                            <label for="status">Delivery Status</label>
+                            <select id="status" name="status">
+                                <option value="">All Statuses</option>
+
+                                <% statuses.forEach(status => { %>
+                                    <option
+                                        value="<%= status %>"
+                                        <%= filters.status === status ? 'selected' : '' %>
+                                    >
+                                        <%= status %>
+                                    </option>
+                                <% }) %>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="deliveryType">Delivery Type</label>
+                            <select id="deliveryType" name="deliveryType">
+                                <option value="">All Delivery Types</option>
+
+                                <% deliveryTypes.forEach(type => { %>
+                                    <option
+                                        value="<%= type %>"
+                                        <%= filters.deliveryType === type ? 'selected' : '' %>
+                                    >
+                                        <%= type.replace('_', ' ') %>
+                                    </option>
+                                <% }) %>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="staffId">Assigned Staff</label>
+                            <select id="staffId" name="staffId">
+                                <option value="">All Staff Members</option>
+
+                                <% staffMembers.forEach(staff => { %>
+                                    <option
+                                        value="<%= staff.staff_id %>"
+                                        <%= String(filters.staffId) === String(staff.staff_id) ? 'selected' : '' %>
+                                    >
+                                        <%= staff.full_name %>
+                                    </option>
+                                <% }) %>
+                            </select>
+                        </div>
+
+                    </div>
+
+                </form>
+            </section>
+
+            <!-- Parcel results -->
+            <section class="dashboard-card parcel-results-card">
+
+                <div class="parcel-results-heading">
+                    <div>
+                        <h2>Parcel Records</h2>
+                        <p>
+                            Showing <strong><%= parcels.length %></strong>
+                            of <strong><%= pagination.totalRecords %></strong>
+                            matching parcels
+                        </p>
+                    </div>
+
+                    <span class="parcel-count">
+                        <%= pagination.totalRecords %> Records
+                    </span>
+                </div>
+
+                <% if (parcels.length > 0) { %>
+
+                    <!-- Desktop table -->
+                    <div class="table-responsive parcel-desktop-table">
+                        <table class="dashboard-table parcel-table">
+                            <thead>
+                                <tr>
+                                    <th>Tracking Number</th>
+                                    <th>Receiver</th>
+                                    <th>Delivery Type</th>
+                                    <th>Charge</th>
+                                    <th>Assigned Staff</th>
+                                    <th>Status</th>
+                                    <th>Registered</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <% parcels.forEach(parcel => { %>
+                                    <tr>
+                                        <td>
+                                            <strong class="tracking-number">
+                                                <%= parcel.trackingNumber %>
+                                            </strong>
+                                        </td>
+
+                                        <td>
+                                            <span class="parcel-receiver-name">
+                                                <%= parcel.receiverName %>
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <span class="delivery-type">
+                                                <%= parcel.deliveryType.replace('_', ' ') %>
+                                            </span>
+                                        </td>
+
+                                        <td class="parcel-charge">
+                                            Rs. <%= Number(parcel.deliveryCharge).toFixed(2) %>
+                                        </td>
+
+                                        <td>
+                                            <% if (parcel.assignedStaffName) { %>
+                                                <span class="assigned-staff">
+                                                    <%= parcel.assignedStaffName %>
+                                                </span>
+                                            <% } else { %>
+                                                <span class="unassigned-label">
+                                                    Not Assigned
+                                                </span>
+                                            <% } %>
+                                        </td>
+
+                                        <td>
+                                            <%- include('../partials/status-badge', {
+                                                status: parcel.currentStatus
+                                            }) %>
+                                        </td>
+
+                                        <td>
+                                            <span class="parcel-date">
+                                                <%= new Date(parcel.registeredAt).toLocaleDateString('en-GB', {
+                                                    day: '2-digit',
+                                                    month: 'short',
+                                                    year: 'numeric'
+                                                }) %>
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <a
+                                                href="/parcels/<%= parcel.id %>"
+                                                class="table-action"
+                                            >
+                                                View Details
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Mobile parcel cards -->
+                    <div class="parcel-mobile-list">
+
+                        <% parcels.forEach(parcel => { %>
+                            <article class="parcel-mobile-card">
+
+                                <div class="parcel-mobile-card-top">
+                                    <div>
+                                        <span class="mobile-card-label">Tracking Number</span>
+                                        <strong class="tracking-number">
+                                            <%= parcel.trackingNumber %>
+                                        </strong>
+                                    </div>
+
+                                    <%- include('../partials/status-badge', {
+                                        status: parcel.currentStatus
+                                    }) %>
+                                </div>
+
+                                <div class="parcel-mobile-details">
+
+                                    <div>
+                                        <span class="mobile-card-label">Receiver</span>
+                                        <strong><%= parcel.receiverName %></strong>
+                                    </div>
+
+                                    <div>
+                                        <span class="mobile-card-label">Delivery Type</span>
+                                        <strong><%= parcel.deliveryType.replace('_', ' ') %></strong>
+                                    </div>
+
+                                    <div>
+                                        <span class="mobile-card-label">Delivery Charge</span>
+                                        <strong>Rs. <%= Number(parcel.deliveryCharge).toFixed(2) %></strong>
+                                    </div>
+
+                                    <div>
+                                        <span class="mobile-card-label">Assigned Staff</span>
+                                        <strong>
+                                            <%= parcel.assignedStaffName || 'Not Assigned' %>
+                                        </strong>
+                                    </div>
+
+                                    <div>
+                                        <span class="mobile-card-label">Registered</span>
+                                        <strong>
+                                            <%= new Date(parcel.registeredAt).toLocaleDateString('en-GB', {
+                                                day: '2-digit',
+                                                month: 'short',
+                                                year: 'numeric'
+                                            }) %>
+                                        </strong>
+                                    </div>
+
+                                </div>
+
+                                <a
+                                    href="/parcels/<%= parcel.id %>"
+                                    class="btn btn-outline parcel-mobile-action"
+                                >
+                                    View Parcel Details
+                                </a>
+
+                            </article>
+                        <% }) %>
+
+                    </div>
+
+                    <!-- Pagination -->
+                    <% if (pagination.totalPages > 1) { %>
+
+                        <div class="parcel-pagination">
+
+                            <div class="pagination-info">
+                                Page <strong><%= pagination.currentPage %></strong>
+                                of <strong><%= pagination.totalPages %></strong>
+                            </div>
+
+                            <div class="pagination-controls">
+
+                                <% if (pagination.currentPage > 1) { %>
+                                    <a
+                                        class="pagination-button"
+                                        href="/parcels?<%= new URLSearchParams({
+                                            ...filters,
+                                            page: pagination.currentPage - 1
+                                        }).toString() %>"
+                                    >
+                                        Previous
+                                    </a>
+                                <% } else { %>
+                                    <span class="pagination-button disabled">
+                                        Previous
+                                    </span>
+                                <% } %>
+
+                                <% 
+                                    const startPage = Math.max(1, pagination.currentPage - 2);
+                                    const endPage = Math.min(
+                                        pagination.totalPages,
+                                        pagination.currentPage + 2
+                                    );
+                                %>
+
+                                <% for (let page = startPage; page <= endPage; page++) { %>
+                                    <a
+                                        class="pagination-button <%= page === pagination.currentPage ? 'active' : '' %>"
+                                        href="/parcels?<%= new URLSearchParams({
+                                            ...filters,
+                                            page
+                                        }).toString() %>"
+                                    >
+                                        <%= page %>
+                                    </a>
+                                <% } %>
+
+                                <% if (pagination.currentPage < pagination.totalPages) { %>
+                                    <a
+                                        class="pagination-button"
+                                        href="/parcels?<%= new URLSearchParams({
+                                            ...filters,
+                                            page: pagination.currentPage + 1
+                                        }).toString() %>"
+                                    >
+                                        Next
+                                    </a>
+                                <% } else { %>
+                                    <span class="pagination-button disabled">
+                                        Next
+                                    </span>
+                                <% } %>
+
+                            </div>
+                        </div>
+
+                    <% } %>
+
+                <% } else { %>
+
+                    <!-- Empty state -->
+                    <div class="parcel-empty-state">
+                        <div class="parcel-empty-icon">📦</div>
+
+                        <h3>No Parcels Found</h3>
+
+                        <p>
+                            <% if (
+                                filters.search ||
+                                filters.status ||
+                                filters.deliveryType ||
+                                filters.staffId
+                            ) { %>
+                                No parcels match your current search or filters.
+                                Try changing your search criteria.
+                            <% } else { %>
+                                There are no registered parcels yet.
+                                Register your first parcel to get started.
+                            <% } %>
+                        </p>
+
+                        <% if (
+                            filters.search ||
+                            filters.status ||
+                            filters.deliveryType ||
+                            filters.staffId
+                        ) { %>
+                            <a href="/parcels" class="btn btn-outline">
+                                Clear Filters
+                            </a>
+                        <% } else { %>
+                            <a href="/parcels/new" class="btn btn-primary">
+                                + Register Parcel
+                            </a>
+                        <% } %>
+                    </div>
+
+                <% } %>
+
+            </section>
+
+        </div>
+    </main>
+
+    <script src="/js/dashboard.js"></script>
+    <script src="/js/parcel-list.js"></script>
+
+</body>
+</html>

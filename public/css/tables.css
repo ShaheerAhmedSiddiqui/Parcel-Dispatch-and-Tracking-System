@@ -1,0 +1,395 @@
+
+/* =========================================
+   PARCELTRACK - PARCEL MANAGEMENT TABLES
+========================================= */
+
+/* Filter card */
+.parcel-filter-card {
+    background: #ffffff;
+    border: 1px solid #eeeeee;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.parcel-search-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+.parcel-search-input {
+    flex: 1;
+    min-width: 200px;
+}
+
+.parcel-search-input label,
+.parcel-filter-grid label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #333333;
+    margin-bottom: 8px;
+}
+
+.parcel-search-input input,
+.parcel-filter-grid select {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 13px;
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #333333;
+    font-family: inherit;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.parcel-search-input input:focus,
+.parcel-filter-grid select:focus {
+    border-color: #ff6e49;
+    box-shadow: 0 0 0 3px rgba(255, 110, 73, 0.10);
+}
+
+.parcel-search-row .btn {
+    min-height: 44px;
+    white-space: nowrap;
+}
+
+.btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 18px;
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #333333;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-outline:hover {
+    border-color: #ff6e49;
+    color: #ff6e49;
+}
+
+.parcel-filter-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.parcel-filter-grid .form-group {
+    margin: 0;
+}
+
+/* Results section */
+.parcel-results-card {
+    overflow: hidden;
+}
+
+.parcel-results-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 22px 24px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.parcel-results-heading h2 {
+    margin: 0 0 6px;
+    font-size: 18px;
+    color: #171717;
+}
+
+.parcel-results-heading p {
+    margin: 0;
+    color: #777777;
+    font-size: 13px;
+}
+
+.parcel-count {
+    padding: 7px 12px;
+    border-radius: 20px;
+    background: #fff0ec;
+    color: #e85f3c;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Parcel table */
+.parcel-table {
+    min-width: 1050px;
+}
+
+.parcel-table th {
+    white-space: nowrap;
+}
+
+.parcel-table td {
+    vertical-align: middle;
+}
+
+.parcel-receiver-name {
+    color: #333333;
+    font-weight: 500;
+}
+
+.parcel-charge {
+    white-space: nowrap;
+    font-weight: 600;
+    color: #333333;
+}
+
+.assigned-staff {
+    color: #444444;
+    font-size: 13px;
+}
+
+.unassigned-label {
+    display: inline-block;
+    color: #b7791f;
+    background: #fff8e6;
+    border-radius: 5px;
+    padding: 5px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.parcel-date {
+    color: #777777;
+    white-space: nowrap;
+    font-size: 12px;
+}
+
+/* Mobile cards */
+.parcel-mobile-list {
+    display: none;
+}
+
+.parcel-mobile-card {
+    padding: 18px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.parcel-mobile-card:last-child {
+    border-bottom: none;
+}
+
+.parcel-mobile-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.parcel-mobile-card-top > div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.mobile-card-label {
+    display: block;
+    color: #888888;
+    font-size: 11px;
+    margin-bottom: 5px;
+}
+
+.parcel-mobile-card .tracking-number {
+    font-size: 13px;
+}
+
+.parcel-mobile-details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 17px 12px;
+    padding: 17px 0;
+}
+
+.parcel-mobile-details > div {
+    min-width: 0;
+}
+
+.parcel-mobile-details strong {
+    display: block;
+    color: #333333;
+    font-size: 13px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.parcel-mobile-action {
+    width: 100%;
+    min-height: 42px;
+}
+
+/* Pagination */
+.parcel-pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 20px 24px;
+    border-top: 1px solid #eeeeee;
+}
+
+.pagination-info {
+    color: #777777;
+    font-size: 13px;
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.pagination-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 36px;
+    min-height: 36px;
+    padding: 7px 11px;
+    border: 1px solid #e5e5e5;
+    border-radius: 7px;
+    color: #444444;
+    background: #ffffff;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.pagination-button:hover:not(.disabled),
+.pagination-button.active {
+    background: #ff6e49;
+    border-color: #ff6e49;
+    color: #ffffff;
+}
+
+.pagination-button.disabled {
+    color: #bbbbbb;
+    background: #fafafa;
+    cursor: not-allowed;
+}
+
+/* Empty state */
+.parcel-empty-state {
+    padding: 65px 20px;
+    text-align: center;
+}
+
+.parcel-empty-icon {
+    font-size: 42px;
+    margin-bottom: 14px;
+}
+
+.parcel-empty-state h3 {
+    margin: 0 0 9px;
+    color: #222222;
+    font-size: 19px;
+}
+
+.parcel-empty-state p {
+    max-width: 430px;
+    margin: 0 auto 20px;
+    color: #777777;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+    .parcel-table {
+        min-width: 1000px;
+    }
+}
+
+@media (max-width: 900px) {
+    .parcel-filter-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 650px) {
+    .parcel-filter-card {
+        padding: 17px;
+    }
+
+    .parcel-search-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .parcel-search-input {
+        grid-column: 1 / -1;
+    }
+
+    .parcel-search-row .btn {
+        width: 100%;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .parcel-filter-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .parcel-results-heading {
+        padding: 18px;
+    }
+
+    .parcel-results-heading h2 {
+        font-size: 16px;
+    }
+
+    .parcel-desktop-table {
+        display: none;
+    }
+
+    .parcel-mobile-list {
+        display: block;
+    }
+
+    .parcel-pagination {
+        padding: 17px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .pagination-controls {
+        width: 100%;
+    }
+}
+
+@media (max-width: 380px) {
+    .parcel-mobile-card-top {
+        flex-direction: column;
+    }
+
+    .parcel-mobile-details {
+        grid-template-columns: 1fr;
+    }
+
+    .pagination-button {
+        min-width: 32px;
+        padding: 6px 8px;
+    }
+}
