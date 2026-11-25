@@ -8,7 +8,7 @@ Request path: **Route → Middleware → Controller → Service → Repository �
 
 ## Target source layout
 
-\`\`\`text
+```text
 src/
 ├── app.js
 ├── server.js
@@ -61,9 +61,9 @@ src/
     ├── tracking/
     ├── errors/
     └── partials/
-\`\`\`
+```
 
-The existing repository already has \`app.js\`, \`server.js\`, \`config/db.js\`, \`middleware/auth.js\`, service placeholders, and EJS files under \`src/views\`. Keep existing files and the UI teammate's work. Introduce missing folders/modules incrementally; do not move or rename view files without coordinating with the frontend owner.
+The existing repository already has `app.js`, `server.js`, `config/db.js`, `middleware/auth.js`, service placeholders, and EJS files under `src/views`. Keep existing files and the UI teammate's work. Introduce missing folders/modules incrementally; do not move or rename view files without coordinating with the frontend owner.
 
 ## Responsibility rules
 
