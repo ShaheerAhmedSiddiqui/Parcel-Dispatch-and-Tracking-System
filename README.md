@@ -151,7 +151,7 @@ Quality assurance will be integrated throughout the SDLC rather than postponed u
 │   ├── validators/   # Input validation
 │   ├── views/        # EJS templates
 │   └── public/       # CSS, JavaScript, and images
-├── tests/            # Unit, integration, system, and acceptance tests
+├── test/             # Unit, integration, system, and acceptance tests (current folder)
 ├── database/         # Schema, migrations, and seed data
 ├── docs/             # Requirements, design, QA, testing, metrics, reports
 ├── scripts/          # Development and maintenance scripts
@@ -230,7 +230,7 @@ Test results will be recorded with their execution context and supporting eviden
 All project changes should follow this workflow:
 
 1. Create a GitHub Issue describing the requirement, task, or defect.
-2. Create a branch from the latest `main`.
+2. Create a task branch from the latest agreed base branch (`backend` for backend work; use `main` only for work targeting the stable integration branch).
 3. Implement the change and add or update tests.
 4. Commit using Conventional Commits.
 5. Open a Pull Request and reference the related Issue.
@@ -258,6 +258,15 @@ Project documentation will be maintained in the `docs/` directory.
 | Development Practices | TDD log, unit-testing notes, lessons learned                    |
 | Quality Evaluation    | Quality metrics report and recommendations                      |
 | Final Submission      | Consolidated final report and presentation materials            |
+
+## Design References
+
+The detailed Deliverable 3 design documents are maintained separately:
+
+- [System architecture and component diagram](docs/design/system-architecture.md)
+- [MVC architecture and source layout](docs/design/mvc-architecture.md)
+- [Logical database design and ER diagram](docs/design/database-design.md)
+- [GitHub collaboration and development workflow](docs/workflow-notes.md)
 
 ## Project Team
 
