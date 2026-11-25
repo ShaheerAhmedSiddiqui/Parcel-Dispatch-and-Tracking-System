@@ -59,6 +59,14 @@ app.get('/', (req, res) => {
   });
 });
 
+// Public About page
+app.get('/about', (req, res) => {
+  res.render('about', {
+    title: 'About Us',
+    activePage: 'about',
+  });
+});
+
 // Authentication routes: /login, /logout
 app.use('/', authRoutes);
 

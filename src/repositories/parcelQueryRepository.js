@@ -82,12 +82,13 @@ async function getParcelList(filters = {}) {
     };
 }
 
+
 async function getAssignedStaff(parcelId) {
     const [rows] = await pool.execute(
         `SELECT
-            ds.staff_id AS staffId,
-            u.user_id AS userId,
-            u.full_name AS fullName,
+            ds.staff_id,
+            u.user_id,
+            u.full_name,
             u.email,
             ds.phone,
             ds.availability
