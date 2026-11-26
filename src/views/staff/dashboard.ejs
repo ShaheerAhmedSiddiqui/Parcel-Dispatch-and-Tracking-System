@@ -1,0 +1,290 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> | ParcelTrack</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+</head>
+
+<body class="dashboard-body">
+
+    <%- include('../partials/dashboard-header') %>
+
+    <%- include('../partials/staff-sidebar') %>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="dashboard-main">
+        <div class="dashboard-content">
+
+            <!-- Page heading -->
+            <section class="page-heading staff-page-heading">
+                <div>
+                    <h1>My Deliveries</h1>
+                    <p>Manage your assigned parcels and update delivery progress.</p>
+                </div>
+            </section>
+
+            <!-- Statistics -->
+            <section class="stats-grid">
+
+                <article class="stat-card">
+                    <div class="stat-card-top">
+                        <span class="stat-label">Assigned Parcels</span>
+                        <span class="stat-icon stat-icon-orange">▣</span>
+                    </div>
+                    <h2><%= stats.assignedParcels %></h2>
+                    <p>Total parcels assigned to you</p>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-card-top">
+                        <span class="stat-label">Out for Delivery</span>
+                        <span class="stat-icon stat-icon-blue">➜</span>
+                    </div>
+                    <h2><%= stats.outForDelivery %></h2>
+                    <p>Currently out for delivery</p>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-card-top">
+                        <span class="stat-label">Delivered</span>
+                        <span class="stat-icon stat-icon-green">✓</span>
+                    </div>
+                    <h2><%= stats.deliveredParcels %></h2>
+                    <p>Successfully delivered parcels</p>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-card-top">
+                        <span class="stat-label">Failed Deliveries</span>
+                        <span class="stat-icon stat-icon-yellow">!</span>
+                    </div>
+                    <h2><%= stats.failedDeliveries %></h2>
+                    <p>Deliveries requiring attention</p>
+                </article>
+
+            </section>
+
+            <!-- Parcel list -->
+            <section class="dashboard-card staff-deliveries-card">
+
+                <div class="section-title-row staff-deliveries-heading">
+                    <div>
+                        <h2>Assigned Deliveries</h2>
+                        <p>Search and manage your assigned parcels.</p>
+                    </div>
+
+                    <span class="staff-record-count">
+                        <%= parcels.length %> Parcels
+                    </span>
+                </div>
+
+                <!-- Search and filters -->
+                <form action="/staff" method="GET" class="staff-filter-form">
+
+                    <div class="staff-search-field">
+                        <label for="staffSearch">Search Deliveries</label>
+                        <input
+                            type="text"
+                            id="staffSearch"
+                            name="search"
+                            placeholder="Tracking number, receiver or address..."
+                            value="<%= filters.search %>"
+                        >
+                    </div>
+
+                    <div class="staff-status-field">
+                        <label for="staffStatus">Delivery Status</label>
+                        <select id="staffStatus" name="status">
+                            <option value="">All Statuses</option>
+
+                            <% availableStatuses.forEach(status => { %>
+                                <option
+                                    value="<%= status %>"
+                                    <%= filters.status === status ? 'selected' : '' %>
+                                >
+                                    <%= status %>
+                                </option>
+                            <% }) %>
+                        </select>
+                    </div>
+
+                    <div class="staff-filter-actions">
+                        <button type="submit" class="btn btn-primary">
+                            Search
+                        </button>
+
+                        <a href="/staff" class="btn btn-outline">
+                            Clear Filters
+                        </a>
+                    </div>
+
+                </form>
+
+                <!-- Delivery records -->
+                <% if (parcels.length > 0) { %>
+
+                    <div class="table-responsive staff-table-wrapper">
+                        <table class="dashboard-table staff-deliveries-table">
+                            <thead>
+                                <tr>
+                                    <th>Tracking Number</th>
+                                    <th>Receiver</th>
+                                    <th>Delivery Address</th>
+                                    <th>Delivery Type</th>
+                                    <th>Last Updated</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <% parcels.forEach(parcel => { %>
+                                    <tr>
+                                        <td>
+                                            <strong class="tracking-number">
+                                                <%= parcel.trackingNumber %>
+                                            </strong>
+                                        </td>
+
+                                        <td>
+                                            <span class="staff-receiver-name">
+                                                <%= parcel.receiverName %>
+                                            </span>
+                                            <span class="staff-receiver-contact">
+                                                <%= parcel.receiverContact || '' %>
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <span class="staff-address">
+                                                <%= parcel.deliveryAddress %>
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <span class="delivery-type">
+                                                <%= parcel.deliveryType.replace(/_/g, ' ') %>
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <%= new Date(parcel.updatedAt).toLocaleDateString('en-GB', {
+                                                day: '2-digit',
+                                                month: 'short',
+                                                year: 'numeric'
+                                            }) %>
+                                        </td>
+
+                                        <td>
+                                            <%- include('../partials/status-badge', {
+                                                status: parcel.currentStatus
+                                            }) %>
+                                        </td>
+
+                                        <td>
+                                            <a
+                                                href="/staff/parcels/<%= parcel.id %>"
+                                                class="table-action"
+                                            >
+                                                View Details
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Mobile delivery cards -->
+                    <div class="staff-mobile-deliveries">
+                        <% parcels.forEach(parcel => { %>
+                            <article class="staff-mobile-card">
+
+                                <div class="staff-mobile-card-top">
+                                    <strong class="tracking-number">
+                                        <%= parcel.trackingNumber %>
+                                    </strong>
+
+                                    <%- include('../partials/status-badge', {
+                                        status: parcel.currentStatus
+                                    }) %>
+                                </div>
+
+                                <div class="staff-mobile-card-info">
+                                    <div>
+                                        <span>Receiver</span>
+                                        <strong><%= parcel.receiverName %></strong>
+                                    </div>
+
+                                    <div>
+                                        <span>Delivery Address</span>
+                                        <strong><%= parcel.deliveryAddress %></strong>
+                                    </div>
+
+                                    <div>
+                                        <span>Delivery Type</span>
+                                        <strong>
+                                            <%= parcel.deliveryType.replace(/_/g, ' ') %>
+                                        </strong>
+                                    </div>
+
+                                    <div>
+                                        <span>Last Updated</span>
+                                        <strong>
+                                            <%= new Date(parcel.updatedAt).toLocaleDateString('en-GB') %>
+                                        </strong>
+                                    </div>
+                                </div>
+
+                                <a
+                                    href="/staff/parcels/<%= parcel.id %>"
+                                    class="btn btn-primary staff-mobile-action"
+                                >
+                                    View Delivery Details
+                                </a>
+
+                            </article>
+                        <% }) %>
+                    </div>
+
+                <% } else { %>
+
+                    <div class="empty-state staff-empty-state">
+                        <div class="empty-state-icon">▣</div>
+
+                        <h3>No Deliveries Found</h3>
+
+                        <% if (filters.search || filters.status) { %>
+                            <p>
+                                No assigned parcels match your current search or filters.
+                                Try changing your search criteria.
+                            </p>
+
+                            <a href="/staff" class="btn btn-outline">
+                                Clear Filters
+                            </a>
+                        <% } else { %>
+                            <p>
+                                You don't have any parcels assigned to you yet.
+                                New assignments will appear here.
+                            </p>
+                        <% } %>
+                    </div>
+
+                <% } %>
+
+            </section>
+
+        </div>
+    </main>
+
+    <script src="/js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<%
+    const statusClassMap = {
+        'Booked': 'status-booked',
+        'Assigned': 'status-assigned',
+        'Dispatched': 'status-dispatched',
+        'Out for Delivery': 'status-out-for-delivery',
+        'Delivered': 'status-delivered',
+        'Delivery Failed': 'status-failed',
+        'Return Initiated': 'status-return',
+        'Return in Transit': 'status-return',
+        'Returned to Sender': 'status-returned'
+    };
+
+    const badgeClass = statusClassMap[status] || 'status-default';
+%>
+
+<span class="status-badge <%= badgeClass %>">
+    <%= status || 'Unknown' %>
+</span>

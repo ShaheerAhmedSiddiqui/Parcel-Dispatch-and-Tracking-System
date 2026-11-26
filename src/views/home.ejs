@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ParcelTrack makes parcel registration, delivery management, and shipment tracking simple.">
+  <title><%= title || 'ParcelTrack - Parcel Dispatch and Tracking' %></title>
+</head>
+<body>
+
+  <%- include('partials/public-header', { activePage: 'home' }) %>
+
+  <main class="public-main">
+
+    <!-- Hero Section -->
+    <section class="home-hero">
+      <div class="container">
+        <div class="hero-content">
+
+          <span class="hero-eyebrow">
+            SIMPLE. RELIABLE. TRACKABLE.
+          </span>
+
+          <h1>
+            Your parcels, <span>always within reach.</span>
+          </h1>
+
+          <p class="hero-description">
+            Track your shipments, stay informed about delivery progress,
+            and experience a simpler way to manage your parcels.
+          </p>
+
+          <div class="tracking-search-card">
+            <div class="tracking-card-heading">
+              <div>
+                <h2>Track Your Parcel</h2>
+                <p>Enter your tracking number to check your shipment status.</p>
+              </div>
+              <span class="tracking-icon" aria-hidden="true">↗</span>
+            </div>
+
+            <form id="homeTrackingForm" class="home-tracking-form">
+              <label for="homeTrackingNumber">Tracking Number</label>
+
+              <div class="tracking-input-group">
+                <input
+                  type="text"
+                  id="homeTrackingNumber"
+                  name="trackingNumber"
+                  class="form-control"
+                  placeholder="e.g. PT-000001"
+                  autocomplete="off"
+                  required
+                >
+
+                <button type="submit" class="btn btn-primary">
+                  Track Parcel <span aria-hidden="true">→</span>
+                </button>
+              </div>
+
+              <p id="trackingFormError" class="tracking-form-error" role="alert"></p>
+            </form>
+          </div>
+
+          <div class="hero-note">
+            <span aria-hidden="true">✓</span>
+            No customer account required. Track using your tracking number.
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section how-it-works" id="how-it-works">
+      <div class="container">
+
+        <div class="section-heading">
+          <span class="section-eyebrow">HOW IT WORKS</span>
+          <h2>Three simple steps to delivery</h2>
+          <p>
+            From parcel registration to successful delivery,
+            follow a clear and organized process.
+          </p>
+        </div>
+
+        <div class="steps-grid">
+
+          <article class="step-card">
+            <div class="step-number">01</div>
+            <div class="step-icon" aria-hidden="true">▤</div>
+            <h3>Register</h3>
+            <p>
+              Your parcel is registered with sender, receiver,
+              and shipment details.
+            </p>
+          </article>
+
+          <article class="step-card">
+            <div class="step-number">02</div>
+            <div class="step-icon" aria-hidden="true">⇢</div>
+            <h3>Dispatch</h3>
+            <p>
+              The parcel is assigned to delivery staff and
+              moves through the delivery process.
+            </p>
+          </article>
+
+          <article class="step-card">
+            <div class="step-number">03</div>
+            <div class="step-icon" aria-hidden="true">✓</div>
+            <h3>Deliver</h3>
+            <p>
+              Follow shipment updates and check the recorded
+              delivery status using your tracking number.
+            </p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="section home-features" id="features">
+      <div class="container">
+
+        <div class="section-heading">
+          <span class="section-eyebrow">OUR FEATURES</span>
+          <h2>Everything you need to stay informed</h2>
+          <p>
+            ParcelTrack brings essential parcel management
+            and tracking information together.
+          </p>
+        </div>
+
+        <div class="features-grid">
+
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">⌕</div>
+            <h3>Parcel Tracking</h3>
+            <p>
+              Search for a parcel using its unique tracking number
+              without creating an account.
+            </p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">☷</div>
+            <h3>Shipment History</h3>
+            <p>
+              Review recorded shipment status updates and
+              follow the parcel's progress.
+            </p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">▣</div>
+            <h3>Delivery Management</h3>
+            <p>
+              Support organized parcel assignment and
+              delivery status management.
+            </p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">◎</div>
+            <h3>Delivery Status</h3>
+            <p>
+              Check the latest recorded status of your
+              shipment through the tracking page.
+            </p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Call to action -->
+    <section class="home-cta">
+      <div class="container">
+        <div class="cta-content">
+          <div>
+            <h2>Have a parcel to track?</h2>
+            <p>Enter your tracking number and check its latest status.</p>
+          </div>
+
+          <a href="/track" class="btn btn-primary">
+            Track Your Parcel <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <%- include('partials/footer') %>
+
+</body>
+</html>
