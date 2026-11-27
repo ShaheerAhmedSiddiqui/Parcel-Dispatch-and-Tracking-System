@@ -51,3 +51,12 @@ UAT verifies that the implemented workflows meet the practical needs of the defi
 ## 6. UAT Conclusion
 
 UAT scenarios are prepared but have not been executed or accepted. Do not mark the system as accepted until the reviewers complete the scenarios and record their decisions.
+
+
+---
+
+## 7. Deliverable 6 — UAT Execution Status
+
+The automated `npm test` run passed 6 suites and 31 tests, but it did not include UAT participants or acceptance decisions. All seven UAT scenarios above therefore remain **Not Run / Pending**. No reviewer sign-off, acceptance, rejection, or conditional acceptance is claimed.
+
+UAT must be performed separately with the Administrator / Courier Clerk, Delivery Staff, and public Customer workflows, using synthetic data and recording actual results and reviewer decisions.

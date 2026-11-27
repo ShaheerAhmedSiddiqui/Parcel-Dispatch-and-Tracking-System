@@ -114,3 +114,46 @@ Automated tests that require a live MySQL database are intentionally not include
 ## 10. Execution Record
 
 The cases in this document are initially **Not Run**. After execution, update Actual Result and Status. Link any reproducible failure to its GitHub defect issue and record the retest result.
+
+
+---
+
+## 11. Deliverable 6 — Automated Execution Addendum
+
+**Execution evidence:** 27 November 2026 terminal capture; command `npm test`.  
+**Overall automated result:** 6 suites passed, 31 tests passed, 0 failed; 9.582 seconds.  
+**Coverage:** 35.36% statements, 20.90% branches, 28.35% functions, 35.30% lines.
+
+### Automated result mapped to test cases
+
+The entries below record the automated coverage actually exercised. Where the automated check covers only a unit/service or page-rendering portion, the complete system scenario remains Not Run.
+
+| Test case | Automated evidence | Recorded result and limitation |
+|---|---|---|
+| TC-006 | IT-004 | Pass for unauthenticated redirects on /admin/dashboard, /parcels, and /staff |
+| TC-011 | UT-016 | Partial unit verification passed for contact length/character validation; form submission not run |
+| TC-012 | UT-017 | Partial unit verification passed for weight validation; parcel form/database flow not run |
+| TC-013 | UT-017 | Partial unit verification passed for distance validation; parcel form/database flow not run |
+| TC-014 | UT-018, UT-019 | Partial unit verification passed for supported/unsupported delivery types; form flow not run |
+| TC-018 | UT-001, UT-002 | Charge-calculator formula and rounding assertions passed; database quote flow not run |
+| TC-020 | UT-005 | Missing pricing-rule input was rejected by the calculator; database lookup/registration flow not run |
+| TC-021 | UT-005 | Invalid pricing configuration was rejected by the calculator; database configuration flow not run |
+| TC-026 | UT-006, UT-007 | Partial service-level verification passed for permitted transitions; controller/database workflow not run |
+| TC-027 | UT-008, UT-009, UT-010 | Partial service-level verification passed for invalid/terminal/unknown transitions; controller/database workflow not run |
+| TC-036 | IT-002 | Public tracking page rendered without authentication; actual parcel search/result not run |
+| TC-038 | IT-003 | Pass for malformed tracking-number request returning HTTP 400 and expected message |
+
+### Additional automated checks
+
+- IT-001: staff login page rendered.
+- IT-005: unauthenticated logout redirected to login.
+- SMK-001 to SMK-004 in `test/app.test.js`: health endpoint, home page, and unknown-route handling passed.
+- All other Deliverable 5 scenarios remain Not Run unless explicitly listed above. A partial unit check does not mark the complete browser/database test case as passed.
+
+### Execution status distinction
+
+- **Automated checks:** 31 passed, 0 failed.
+- **Full system scenarios:** 9 remain Not Run.
+- **UAT scenarios:** 7 remain pending.
+- **Database, performance, concurrency, browser compatibility, and cross-role workflows:** not evidenced by this automated run.
+

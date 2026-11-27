@@ -70,3 +70,31 @@ Create or link GitHub defect issues only after confirming the observed failure t
 ## 7. Conclusion
 
 System testing has been planned but not executed in this report. Update this section after the complete workflows are run in a controlled environment, and attach test evidence and defect references.
+
+
+---
+
+## 8. Deliverable 6 — Automated Test Run Context
+
+A separate local automated run executed `npm test` and reported:
+
+| Metric | Result |
+|---|---:|
+| Automated suites | 6 passed / 6 total |
+| Automated tests | 31 passed / 31 total |
+| Failed tests | 0 |
+| Execution time | 9.582 seconds |
+| Line coverage | 35.30% |
+
+This run covered unit tests and selected HTTP routes/smoke checks. It did **not** execute the nine end-to-end system scenarios above. Therefore the System Test Scenario status remains:
+
+| Metric | Count |
+|---|---:|
+| System scenarios planned | 9 |
+| System scenarios passed | 0 |
+| System scenarios failed | 0 |
+| System scenarios blocked | 0 |
+| System scenarios not run | 9 |
+
+Do not combine unit/integration suite totals with system-scenario totals. Database-backed parcel workflows, full role-based journeys, performance/concurrency checks, and privacy inspection still require separate execution. See `test-execution-report.md` and `evidence/automated-test-run.md`.
+

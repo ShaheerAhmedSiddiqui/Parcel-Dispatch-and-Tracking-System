@@ -124,3 +124,25 @@ This matrix links SRS requirements and business rules to test cases. A mapping i
 - **Pass:** actual result satisfies expected result.
 - **Fail:** actual result differs from expected result.
 - **Blocked:** test cannot proceed because a prerequisite or environment dependency is missing.
+
+
+---
+
+## 8. Deliverable 6 — Automated Execution Overlay
+
+The following status overlay is based on the terminal evidence for `npm test`: 6 suites passed and 31 tests passed. These results are limited to the listed automated checks; they do not establish full SRS requirement verification.
+
+| Requirement / rule | Automated evidence | Execution interpretation |
+|---|---|---|
+| FR-06 / FR-09 / NFR-15 / NFR-23 / BR-02 | UT-014 to UT-019 | Partially verified at validator unit level; form and database flows pending |
+| FR-07 / FR-09 / FR-14 / BR-03 | UT-017 to UT-019 | Partially verified at validator unit level; full parcel registration pending |
+| FR-11 / FR-12 / BR-04 | UT-001 to UT-005 | Charge-calculator unit behavior passed; pricing database and quote workflow pending |
+| FR-16 | No execution evidence | Not Run; availability enforcement remains a Deliverable 5 source-review gap |
+| FR-19 / FR-20 / FR-23 / BR-06 | UT-006 to UT-010 | Status-machine unit checks passed; controller permissions and persistence pending |
+| FR-01 / NFR-12 / NFR-13 | IT-001, IT-004, IT-005 | Login page and unauthenticated redirect checks passed; successful credential login and cross-role checks pending |
+| FR-29 / FR-30 | IT-002 | Public tracking page renders without login; real parcel lookup pending |
+| FR-33 / NFR-15 | IT-003 | Malformed tracking-number request was rejected as expected |
+| All other requirements | No matching automated execution evidence in this run | Remain Not Run / pending system or database testing |
+
+The global coverage recorded by Jest was 35.30% lines. Controller and repository coverage were particularly low. A passing automated check is not a substitute for end-to-end verification or UAT acceptance.
+
