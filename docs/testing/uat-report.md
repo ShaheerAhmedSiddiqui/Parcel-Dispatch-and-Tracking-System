@@ -74,3 +74,67 @@ The Administrator / Courier Clerk, Delivery Staff, and public Customer scenarios
 ## 8. Latest automated system test context
 
 CI workflow [46161684598](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/actions/runs/46161684598) passed 38 regular tests and 9 MySQL-backed workflow tests. This is engineering/system verification, not a human acceptance decision. UAT-01 to UAT-07 must still be demonstrated to the Administrator / Courier Clerk, Delivery Staff, and public Customer representatives, with named reviewers, actual outcomes, decisions, dates and screenshots.
+
+
+---
+
+## 9. Manual UAT Setup — Isolated Local Database
+
+Run UAT only with synthetic data in the dedicated `parcel_db_test` database. Do not use the normal `parcel_db` working database or any production/customer records.
+
+### 9.1 Prepare the test database
+
+1. Start MySQL in XAMPP.
+2. Confirm the local `.env` has the correct `DB_HOST`, `DB_PORT`, `DB_USER`, and `DB_PASSWORD` for your local MySQL installation. Your local environment commonly uses port 3307; use the port configured on your machine.
+3. Run:
+
+```powershell
+npm run test:db
+```
+
+This creates/updates only the guarded `parcel_db_test` database, applies the project schema, and seeds synthetic test-only tariffs and accounts. The command also runs the automated DB test suite.
+
+### 9.2 Start the application against the test database
+
+In the PowerShell window used to start the application:
+
+```powershell
+$env:DB_NAME = "parcel_db_test"
+$env:SESSION_SECRET = "parceltrack-local-uat-only-secret"
+npm start
+```
+
+Keep this PowerShell session open while performing UAT. The environment override applies to that application process; it does not change `.env` or redirect other sessions.
+
+### 9.3 Synthetic UAT accounts
+
+| Role | Username | Password |
+|---|---|---|
+| Administrator / Courier Clerk | `testadmin` | `TestPass123!` |
+| Delivery Staff | `testrider` | `TestPass123!` |
+| Public Customer | No account required | Use `/track` |
+
+These accounts are created by the isolated test setup script. They are for local testing only and must not be used as real credentials.
+
+### 9.4 Recommended UAT execution order
+
+| Order | UAT ID | Action |
+|---|---|---|
+| 1 | UAT-01 | As Administrator, register a synthetic parcel. Verify quote, tracking number and Booked status. With test tariffs, weight 2, distance 5 and STANDARD should quote 135; this is a synthetic test value, not a company tariff. |
+| 2 | UAT-02 | Open the parcel details and assign the AVAILABLE test rider. Confirm the parcel becomes Assigned and the rider availability becomes BUSY. |
+| 3 | UAT-04 | Sign in as Delivery Staff and verify the assigned parcel appears in the delivery list and details. Attempt an admin-only route and confirm it is denied. |
+| 4 | UAT-05 | As the rider, move the parcel through Dispatched and Out for Delivery. Submit a blank failure reason (it should be rejected), then submit a valid synthetic reason (it should be recorded). |
+| 5 | UAT-03 | As Administrator, initiate the return for the eligible failed parcel. Then as the rider, advance it through Return in Transit to Returned to Sender. Confirm the final status and completion timestamp. |
+| 6 | UAT-06 | Sign out and open `/track` as a public customer. Search using the parcel tracking number and check its current status/history. |
+| 7 | UAT-07 | Try malformed and unknown tracking numbers. Inspect the public page and confirm it does not expose names, phone numbers, addresses, staff details or delivery charges. |
+
+### 9.5 Evidence and acceptance record
+
+For each UAT ID, capture:
+- Reviewer/participant and role being evaluated.
+- Date and environment.
+- Actual result and Accepted / Rejected / Conditional decision.
+- Screenshot saved under `docs/testing/evidence/`, for example `uat-01-register-parcel.png`.
+- Any defect issue reference and reproduction steps if the outcome differs from expectation.
+
+Update the UAT scenario row and Acceptance Record only after the reviewer actually performs the scenario. Do not mark a scenario accepted based only on the automated CI run. All seven acceptance decisions are currently **Pending**.
