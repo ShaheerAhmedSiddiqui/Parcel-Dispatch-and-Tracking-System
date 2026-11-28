@@ -1,4 +1,6 @@
 const crypto = require('crypto');
+const { performance } = require('perf_hooks');
+const bcrypt = require('bcryptjs');
 const request = require('supertest');
 
 const runDatabaseTests = process.env.RUN_DB_TESTS === 'true';
@@ -41,7 +43,7 @@ databaseDescribe('ParcelTrack database-backed system workflows', () => {
     await pool.end();
   });
 
-  async function createStaff(availability = 'AVAILABLE') {
+  async function createStaff(availability = 'AVAILABLE', isActive = true) {
     const suffix = crypto.randomBytes(4).toString('hex');
     const username = `db_rider_${suffix}`;
     const email = `${username}@parcel.test`;
@@ -49,8 +51,8 @@ databaseDescribe('ParcelTrack database-backed system workflows', () => {
     const [userResult] = await pool.execute(
       `INSERT INTO users
         (full_name, username, email, password_hash, role, is_active)
-       VALUES (?, ?, ?, ?, 'DELIVERY_STAFF', TRUE)`,
-      [`Database Test Rider ${suffix}`, username, email, admin.password_hash]
+       VALUES (?, ?, ?, ?, 'DELIVERY_STAFF', ?)`,
+      [`Database Test Rider ${suffix}`, username, email, admin.password_hash, isActive]
     );
 
     const [staffResult] = await pool.execute(
@@ -136,16 +138,52 @@ databaseDescribe('ParcelTrack database-backed system workflows', () => {
     await riderAgent.get('/staff').expect(200);
     await riderAgent.get('/admin/dashboard').expect(403);
 
-    const quoteResponse = await adminAgent
+    const pricingCases = [
+      ['STANDARD', 135],
+      ['EXPRESS', 205],
+      ['SAME_DAY', 280],
+    ];
+
+    for (const [deliveryType, expectedCharge] of pricingCases) {
+      const quoteResponse = await adminAgent
+        .post('/parcels/quote')
+        .send({ weight: '2', distance: '5', deliveryType })
+        .expect(200);
+      expect(quoteResponse.body.success).toBe(true);
+      expect(quoteResponse.body.data.deliveryCharge).toBe(expectedCharge);
+    }
+
+    await pool.execute(
+      "DELETE FROM pricing_rules WHERE delivery_type = 'SAME_DAY'"
+    );
+    const missingPricingResponse = await adminAgent
       .post('/parcels/quote')
-      .send({ weight: '2', distance: '5', deliveryType: 'STANDARD' })
-      .expect(200);
-    expect(quoteResponse.body.success).toBe(true);
-    expect(quoteResponse.body.data.deliveryCharge).toBe(135);
+      .send({ weight: '2', distance: '5', deliveryType: 'SAME_DAY' })
+      .expect(400);
+    expect(missingPricingResponse.body.success).toBe(false);
+    await pool.execute(
+      'INSERT INTO pricing_rules (delivery_type, base_charge, per_kg_rate, per_km_rate) VALUES (?, ?, ?, ?)',
+      ['SAME_DAY', 200, 20, 8]
+    );
 
     const created = await registerParcel();
+    const secondCreated = await registerParcel();
+    expect(created.trackingNumber).toMatch(/^PT-\\d{6}$/);
+    expect(secondCreated.trackingNumber).toMatch(/^PT-\\d{6}$/);
+    expect(secondCreated.trackingNumber).not.toBe(created.trackingNumber);
+
     const bookingHistory = await parcelRepository.getShipmentHistory(created.parcelId);
     expect(bookingHistory.map((entry) => entry.status)).toEqual(['Booked']);
+    expect(bookingHistory[0].updated_at).toBeTruthy();
+
+    // Dispatch must be rejected while the parcel is still unassigned.
+    const prematureDispatch = await adminAgent
+      .post(`/parcels/${created.parcelId}/status`)
+      .send({ status: STATUSES.DISPATCHED });
+    expect(prematureDispatch.status).not.toBe(200);
+    const stillBooked = await parcelRepository.findById(created.parcelId);
+    expect(stillBooked.current_status).toBe(STATUSES.BOOKED);
+    expect(stillBooked.assigned_staff_id).toBeNull();
 
     await adminAgent
       .post(`/parcels/${created.parcelId}/assign`)
@@ -179,6 +217,7 @@ databaseDescribe('ParcelTrack database-backed system workflows', () => {
     expect(history.map((entry) => entry.status)).toEqual([
       'Booked', 'Assigned', 'Dispatched', 'Out for Delivery', 'Delivered',
     ]);
+    expect(history.every((entry) => Boolean(entry.updated_at))).toBe(true);
 
     const publicTracking = await request(app)
       .get('/track')
@@ -188,7 +227,21 @@ databaseDescribe('ParcelTrack database-backed system workflows', () => {
     expect(publicTracking.text).toContain(created.trackingNumber);
     expect(publicTracking.text).not.toContain(created.data.senderContact);
     expect(publicTracking.text).not.toContain(created.data.receiverContact);
+    expect(publicTracking.text).not.toContain(created.data.senderName);
+    expect(publicTracking.text).not.toContain(created.data.receiverName);
+    expect(publicTracking.text).not.toContain(created.data.pickupAddress);
+    expect(publicTracking.text).not.toContain(created.data.deliveryAddress);
     expect(publicTracking.text).not.toContain('Rs.');
+
+    // Public customers must not be able to mutate a parcel.
+    const publicMutation = await request(app)
+      .post(`/parcels/${created.parcelId}/status`)
+      .send({ status: STATUSES.DELIVERED });
+    expect(publicMutation.status).toBe(302);
+    expect(publicMutation.headers.location).toBe('/login');
+
+    const afterPublicMutation = await parcelRepository.findById(created.parcelId);
+    expect(afterPublicMutation.current_status).toBe(STATUSES.DELIVERED);
   });
 
   test.each(['BUSY', 'OFF_DUTY'])(
@@ -210,6 +263,25 @@ databaseDescribe('ParcelTrack database-backed system workflows', () => {
     },
   );
 
+  test('SYS-04: rejects inactive or unknown staff profiles', async () => {
+    const inactiveStaff = await createStaff('AVAILABLE', false);
+    const created = await registerParcel();
+
+    const inactiveResult = await adminAgent
+      .post(`/parcels/${created.parcelId}/assign`)
+      .send({ staffId: inactiveStaff.staffId });
+    expect(inactiveResult.status).toBe(409);
+
+    const unknownResult = await adminAgent
+      .post(`/parcels/${created.parcelId}/assign`)
+      .send({ staffId: 99999999 });
+    expect(unknownResult.status).toBe(409);
+
+    const parcel = await parcelRepository.findById(created.parcelId);
+    expect(parcel.current_status).toBe(STATUSES.BOOKED);
+    expect(parcel.assigned_staff_id).toBeNull();
+  });
+
   test('SYS-06: failed-delivery reasons are recorded and the fourth attempt is rejected', async () => {
     const staff = await createStaff();
     const riderAgent = await loginStaff(staff);
@@ -220,6 +292,20 @@ databaseDescribe('ParcelTrack database-backed system workflows', () => {
       .send({ staffId: staff.staffId })
       .expect(200);
     await advanceToOutForDelivery(riderAgent, created.parcelId);
+
+    const emptyReason = await riderAgent
+      .post(`/staff/parcels/${created.parcelId}/status`)
+      .send({
+        status: STATUSES.DELIVERY_FAILED,
+        failureReason: '   ',
+      });
+    expect(emptyReason.status).toBe(400);
+
+    const [attemptsBeforeValidFailure] = await pool.execute(
+      'SELECT attempt_id FROM delivery_attempts WHERE parcel_id = ?',
+      [created.parcelId]
+    );
+    expect(attemptsBeforeValidFailure).toHaveLength(0);
 
     for (let attempt = 1; attempt <= 3; attempt += 1) {
       await riderAgent
@@ -240,6 +326,7 @@ databaseDescribe('ParcelTrack database-backed system workflows', () => {
 
     const attempts = await parcelRepository.getDeliveryAttempts(created.parcelId);
     expect(attempts).toHaveLength(3);
+    expect(attempts.map((entry) => entry.attempt_no)).toEqual([1, 2, 3]);
 
     await riderAgent
       .post(`/staff/parcels/${created.parcelId}/status`)
@@ -304,7 +391,63 @@ databaseDescribe('ParcelTrack database-backed system workflows', () => {
     expect(parcel.current_status).toBe(STATUSES.RETURNED_TO_SENDER);
   });
 
+  test('SYS-09: concurrent assignments reserve one AVAILABLE staff member only once', async () => {
+    const staff = await createStaff();
+    const firstParcel = await registerParcel();
+    const secondParcel = await registerParcel();
+
+    const assignmentResults = await Promise.all([
+      adminAgent
+        .post(`/parcels/${firstParcel.parcelId}/assign`)
+        .send({ staffId: staff.staffId }),
+      adminAgent
+        .post(`/parcels/${secondParcel.parcelId}/assign`)
+        .send({ staffId: staff.staffId }),
+    ]);
+
+    const statuses = assignmentResults.map((result) => result.status).sort();
+    expect(statuses).toEqual([200, 409]);
+
+    const firstSaved = await parcelRepository.findById(firstParcel.parcelId);
+    const secondSaved = await parcelRepository.findById(secondParcel.parcelId);
+    const assignedParcels = [firstSaved, secondSaved].filter(
+      (parcel) => parcel.assigned_staff_id === staff.staffId
+    );
+    expect(assignedParcels).toHaveLength(1);
+
+    const [staffRows] = await pool.execute(
+      'SELECT availability FROM delivery_staff WHERE staff_id = ?',
+      [staff.staffId]
+    );
+    expect(staffRows[0].availability).toBe('BUSY');
+  });
+
+  test('SYS-09: measures a low-load public tracking response-time baseline', async () => {
+    const created = await registerParcel();
+    const timings = [];
+
+    for (let sample = 0; sample < 20; sample += 1) {
+      const startedAt = performance.now();
+      await request(app)
+        .get('/track')
+        .query({ trackingNumber: created.trackingNumber })
+        .expect(200);
+      timings.push(performance.now() - startedAt);
+    }
+
+    timings.sort((a, b) => a - b);
+    const p95Index = Math.ceil(timings.length * 0.95) - 1;
+    const p95Milliseconds = Number(timings[p95Index].toFixed(2));
+    console.log(`SYS-09 low-load tracking p95: ${p95Milliseconds} ms (20 sequential requests)`);
+
+    expect(p95Milliseconds).toBeLessThan(2000);
+  });
+
   test('SYS-08: public tracking rejects malformed and unknown tracking numbers', async () => {
+    const testUser = await userRepository.findByUsername('testadmin');
+    expect(testUser.password_hash).not.toBe(TEST_PASSWORD);
+    expect(await bcrypt.compare(TEST_PASSWORD, testUser.password_hash)).toBe(true);
+
     await request(app)
       .get('/track')
       .query({ trackingNumber: 'INVALID-NUMBER' })
