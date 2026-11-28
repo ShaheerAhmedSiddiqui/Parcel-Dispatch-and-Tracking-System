@@ -168,8 +168,8 @@ databaseDescribe('ParcelTrack database-backed system workflows', () => {
 
     const created = await registerParcel();
     const secondCreated = await registerParcel();
-    expect(created.trackingNumber).toMatch(/^PT-\\d{6}$/);
-    expect(secondCreated.trackingNumber).toMatch(/^PT-\\d{6}$/);
+    expect(created.trackingNumber).toMatch(/^PT-\d{6}$/);
+    expect(secondCreated.trackingNumber).toMatch(/^PT-\d{6}$/);
     expect(secondCreated.trackingNumber).not.toBe(created.trackingNumber);
 
     const bookingHistory = await parcelRepository.getShipmentHistory(created.parcelId);
