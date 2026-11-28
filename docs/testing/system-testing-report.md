@@ -84,7 +84,7 @@ A separate local automated run executed `npm test` and reported:
 | Execution time | 9.582 seconds |
 | Line coverage | 35.30% |
 
-This run covered unit tests and selected HTTP routes/smoke checks. It did **not** execute the nine end-to-end system scenarios above. Therefore the System Test Scenario status remains:
+This was the initial Windows baseline before the later PR #27 database-backed system workflow suite was added. The following counts are historical for that first run only; the executed CI scenario status is updated in Section 10:
 
 | Metric | Count |
 |---|---:|
@@ -94,7 +94,7 @@ This run covered unit tests and selected HTTP routes/smoke checks. It did **not*
 | System scenarios blocked | 0 |
 | System scenarios not run | 9 |
 
-Do not combine unit/integration suite totals with system-scenario totals. Database-backed parcel workflows, full role-based journeys, performance/concurrency checks, and privacy inspection still require separate execution. See `test-execution-report.md` and `evidence/automated-test-run.md`.
+These historical counts are not the latest D6 outcome. See Section 10 for the subsequent CI system workflow execution. Human UAT, browser visual testing, database outage behavior, and broad performance/concurrency checks are still separate work.
 
 
 
@@ -118,7 +118,7 @@ PR #27 adds `test/database/parcelWorkflow.integration.test.js` and `npm run test
 
 The test runner creates or updates only the guarded `parcel_db_test` database. Run it with `npm run test:db` after configuring local MySQL. Do not point it at `parcel_db` or production data.
 
-The CI job configured in [PR #27](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/pull/27) runs both the standard automated tests and the database workflow suite. No system scenario is recorded as Passed until the run output is available and reviewed.
+CI run [46161259201](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/actions/runs/46161259201) completed successfully: 38 regular tests and 9 database tests passed, with no failures. SYS-01 to SYS-08 automated workflow checks passed; SYS-09 is partially passed. These are PR-branch results and await merge.
 
 
 ### CI evidence details

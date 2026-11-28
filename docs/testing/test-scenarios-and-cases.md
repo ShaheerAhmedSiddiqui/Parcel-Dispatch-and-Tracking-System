@@ -109,7 +109,7 @@ Status values: **Not Run**, **Pass**, **Fail**, **Blocked**.
 | IT-001 to IT-007 | test/integration/app.integration.test.js | Login/tracking page rendering, invalid tracking format, protected route redirects, unauthenticated logout |
 | Existing smoke tests | test/app.test.js | Health endpoint, home page, 404 behavior |
 
-Automated tests that require a live MySQL database are intentionally not included until the repository has a dedicated, isolated test-database setup.
+Database-backed workflow tests were added later for Deliverable 6 in `test/database/parcelWorkflow.integration.test.js` and run against the isolated `parcel_db_test` database.
 
 ## 10. Execution Record
 
@@ -148,7 +148,7 @@ The entries below record the automated coverage actually exercised. Where the au
 - IT-001: staff login page rendered.
 - IT-005: unauthenticated logout redirected to login.
 - SMK-001 to SMK-004 in `test/app.test.js`: health endpoint, home page, and unknown-route handling passed.
-- All other Deliverable 5 scenarios remain Not Run unless explicitly listed above. A partial unit check does not mark the complete browser/database test case as passed.
+- This list records the initial Windows run. The latest CI and MySQL-backed case results are added in Section 13 and supersede earlier Not Run entries where specific cases were updated. A partial unit check does not mark an entire browser/database case as passed.
 
 ### Execution status distinction
 
@@ -175,7 +175,7 @@ The following regression coverage has been added. Actual test results remain pen
 
 Run the additional MySQL-backed system workflows with `npm run test:db` after setting up a local MySQL service. The runner uses a separate `parcel_db_test` database and synthetic pricing rows; it must not be pointed at `parcel_db`.
 
-The tests listed here are added but **not yet marked Pass**. SYS-09 performance/concurrency and browser checks and all seven human UAT scenarios still require separately gathered evidence.
+The regression and database tests listed here passed in CI run 46161259201. SYS-09 is partially passed only; browser/viewport checks and all seven human UAT scenarios still require separately gathered evidence.
 
 
 ---

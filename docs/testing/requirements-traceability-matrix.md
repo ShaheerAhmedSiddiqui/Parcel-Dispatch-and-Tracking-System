@@ -111,12 +111,11 @@ This matrix links SRS requirements and business rules to test cases. A mapping i
 
 ## 6. Coverage Notes and Known Gaps
 
-- FR-01 states username or email login. The inspected controller currently calls findByEmail only. Username login needs a test and a tracked implementation correction.
-- FR-16 expects available delivery staff. The inspected staff query and assignment repository do not enforce availability values. TC-024 is specifically intended to expose this gap.
-- Pricing test cases require rows in pricing_rules. The current seed.sql does not insert them; use approved test-only rates in an isolated test database.
-- Return completion must set parcel_returns.completed_at. The repository has a completeReturn function, but the inspected route/controller path does not call it. TC-035 should verify this database field.
-- NFR-05 to NFR-07 require an agreed workload and performance/concurrency evidence. Unit and smoke tests do not demonstrate these targets.
-- TC-047 needs actual browser/viewport execution evidence.
+- FR-01, FR-16 and FR-28 source-level gaps were corrected on PR #27 and their regression / MySQL checks passed in CI run 46161259201. The changes are not yet merged to main.
+- The repository seed does not insert company pricing tariffs. CI used synthetic values only in the isolated parcel_db_test database; these are not proposed as production prices.
+- NFR-05/NFR-06 performance evidence remains partial: the CI run captured a 20-request sequential tracking p95 sample, not a full load test.
+- NFR-07 evidence remains partial: concurrent assignment protection was tested, but broad concurrent staff usage has not been measured.
+- NFR-10 database-outage recovery, TC-046 broader injection testing, and TC-047 browser/viewport review remain not run.
 
 ## 7. Status Legend
 
@@ -130,21 +129,21 @@ This matrix links SRS requirements and business rules to test cases. A mapping i
 
 ## 8. Deliverable 6 — Automated Execution Overlay
 
-The following status overlay is based on the terminal evidence for `npm test`: 6 suites passed and 31 tests passed. These results are limited to the listed automated checks; they do not establish full SRS requirement verification.
+The initial overlay below records the 27 November Windows baseline. The latest 28 November CI outcomes and requirement-by-requirement statuses are recorded in Section 10 and supersede any earlier Not Run status where updated.
 
 | Requirement / rule | Automated evidence | Execution interpretation |
 |---|---|---|
 | FR-06 / FR-09 / NFR-15 / NFR-23 / BR-02 | UT-014 to UT-019 | Partially verified at validator unit level; form and database flows pending |
 | FR-07 / FR-09 / FR-14 / BR-03 | UT-017 to UT-019 | Partially verified at validator unit level; full parcel registration pending |
 | FR-11 / FR-12 / BR-04 | UT-001 to UT-005 | Charge-calculator unit behavior passed; pricing database and quote workflow pending |
-| FR-16 | No execution evidence | Not Run; availability enforcement remains a Deliverable 5 source-review gap |
+| FR-16 | TC-024 and database assignment workflow | Pass on PR #27 CI; awaiting merge to main |
 | FR-19 / FR-20 / FR-23 / BR-06 | UT-006 to UT-010 | Status-machine unit checks passed; controller permissions and persistence pending |
 | FR-01 / NFR-12 / NFR-13 | IT-001, IT-004, IT-005 | Login page and unauthenticated redirect checks passed; successful credential login and cross-role checks pending |
 | FR-29 / FR-30 | IT-002 | Public tracking page renders without login; real parcel lookup pending |
 | FR-33 / NFR-15 | IT-003 | Malformed tracking-number request was rejected as expected |
 | All other requirements | No matching automated execution evidence in this run | Remain Not Run / pending system or database testing |
 
-The global coverage recorded by Jest was 35.30% lines. Controller and repository coverage were particularly low. A passing automated check is not a substitute for end-to-end verification or UAT acceptance.
+The initial Windows baseline recorded 35.30% line coverage. The later CI run improved the measured line coverage to 45.64%; see Section 10. Automated CI checks do not substitute for human UAT or visual browser inspection.
 
 
 
@@ -154,9 +153,9 @@ The global coverage recorded by Jest was 35.30% lines. Controller and repository
 
 | Requirement | New test coverage | Current execution status |
 |---|---|---|
-| FR-01 — username or email login | `test/controllers/authController.test.js`; database-backed role login | Pending PR #27 CI |
-| FR-16 — available staff assignment | `test/unit/userRepository.test.js`, `test/unit/parcelRepository.assignment.test.js`; MySQL assignment workflow | Pending PR #27 CI |
-| FR-28 / NFR-24 — return completion timestamp | `test/unit/parcelRepository.return.test.js`; MySQL return workflow | Pending PR #27 CI |
+| FR-01 — username or email login | `test/controllers/authController.test.js`; database-backed role login | Pass — CI run 46161259201; awaiting merge |
+| FR-16 — available staff assignment | `test/unit/userRepository.test.js`, `test/unit/parcelRepository.assignment.test.js`; MySQL assignment workflow | Pass — CI run 46161259201; awaiting merge |
+| FR-28 / NFR-24 — return completion timestamp | `test/unit/parcelRepository.return.test.js`; MySQL return workflow | Pass — CI run 46161259201; awaiting merge |
 
 The new tests do not count as passed until the updated suite completes successfully. Database workflow evidence is reported separately from the original 31-test baseline.
 
