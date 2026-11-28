@@ -28,3 +28,10 @@ The screenshots are not embedded in this repository commit. Before final submiss
 - `automated-test-run-02.png`
 
 Do not alter the recorded results. The exact Node.js/npm versions and tested commit SHA were not visible in the captured output.
+
+
+## Updated regression and database test evidence
+
+[PR #27](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/pull/27) adds regression tests for the three source-confirmed gaps and an isolated MySQL workflow suite. The CI job is configured to run `npm test` and `npm run test:db`.
+
+These are new tests and are not part of the original screenshot evidence. Capture and record their actual CI/local results separately after completion. The original screenshots remain evidence only for the pre-fix baseline of 31 passing tests.

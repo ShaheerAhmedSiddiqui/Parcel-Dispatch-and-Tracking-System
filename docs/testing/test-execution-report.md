@@ -124,3 +124,18 @@ The captured terminal output is represented by the evidence record in `evidence/
 ## 9. Conclusion
 
 The captured automated run is successful: **6 of 6 suites and 31 of 31 tests passed**. The global line coverage is **35.30%**, so additional controller, repository, database, system, security, performance, and UAT testing is still required. Deliverable 6 must not be considered fully complete until those remaining tests are executed or explicitly marked blocked/not run with reasons.
+
+
+---
+
+## 10. Follow-up Fix Branch and New Test Run
+
+After the original 31-test run recorded above, three source-level gaps were confirmed and corrected in the proposed changes in [PR #27](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/pull/27):
+
+- Login now supports a username or email identifier.
+- Assignment now filters and transactionally reserves AVAILABLE staff; staff are released on delivery/return completion or unassignment.
+- Normal Returned to Sender status updates route through the transaction that records `parcel_returns.completed_at`.
+
+Regression tests were added under `test/controllers/` and `test/unit/`. An isolated MySQL-backed workflow suite was also added at `test/database/parcelWorkflow.integration.test.js`, run by `npm run test:db`.
+
+**Execution status:** The original 31 passing tests predate these changes. The new regression and database tests must be considered pending until PR #27's CI run and local database execution produce actual results. The supplied screenshots do not evidence execution of the new tests.

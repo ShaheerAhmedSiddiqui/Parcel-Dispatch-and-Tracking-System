@@ -157,3 +157,22 @@ The entries below record the automated coverage actually exercised. Where the au
 - **UAT scenarios:** 7 remain pending.
 - **Database, performance, concurrency, browser compatibility, and cross-role workflows:** not evidenced by this automated run.
 
+
+
+---
+
+## 12. Deliverable 6 — New Regression Tests in PR #27
+
+The following regression coverage has been added. Actual test results remain pending until the updated code is run.
+
+| Test file | Verification | Related IDs |
+|---|---|---|
+| `test/controllers/authController.test.js` | Username login, email compatibility, missing identifier/password | DEF-001, TC-001, TC-002 |
+| `test/unit/userRepository.test.js` | AVAILABLE-only assignment list query | DEF-002, TC-024 |
+| `test/unit/parcelRepository.assignment.test.js` | BUSY/OFF_DUTY rejection and AVAILABLE-to-BUSY reservation | DEF-002, TC-024 |
+| `test/unit/parcelRepository.return.test.js` | Normal status update executes transactional return completion and persists `completed_at` | DEF-003, TC-035 |
+| `test/database/parcelWorkflow.integration.test.js` | DB-backed role access, quote, registration, assignment, status progression, attempts, return, tracking and privacy | SYS-01 to SYS-08 |
+
+Run the additional MySQL-backed system workflows with `npm run test:db` after setting up a local MySQL service. The runner uses a separate `parcel_db_test` database and synthetic pricing rows; it must not be pointed at `parcel_db`.
+
+The tests listed here are added but **not yet marked Pass**. SYS-09 performance/concurrency and browser checks and all seven human UAT scenarios still require separately gathered evidence.

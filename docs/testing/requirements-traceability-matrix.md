@@ -146,3 +146,16 @@ The following status overlay is based on the terminal evidence for `npm test`: 6
 
 The global coverage recorded by Jest was 35.30% lines. Controller and repository coverage were particularly low. A passing automated check is not a substitute for end-to-end verification or UAT acceptance.
 
+
+
+---
+
+## 9. Follow-up Regression Coverage
+
+| Requirement | New test coverage | Current execution status |
+|---|---|---|
+| FR-01 — username or email login | `test/controllers/authController.test.js`; database-backed role login | Pending PR #27 CI |
+| FR-16 — available staff assignment | `test/unit/userRepository.test.js`, `test/unit/parcelRepository.assignment.test.js`; MySQL assignment workflow | Pending PR #27 CI |
+| FR-28 / NFR-24 — return completion timestamp | `test/unit/parcelRepository.return.test.js`; MySQL return workflow | Pending PR #27 CI |
+
+The new tests do not count as passed until the updated suite completes successfully. Database workflow evidence is reported separately from the original 31-test baseline.

@@ -98,3 +98,26 @@ This run covered unit tests and selected HTTP routes/smoke checks. It did **not*
 
 Do not combine unit/integration suite totals with system-scenario totals. Database-backed parcel workflows, full role-based journeys, performance/concurrency checks, and privacy inspection still require separate execution. See `test-execution-report.md` and `evidence/automated-test-run.md`.
 
+
+
+---
+
+## 10. Additional Database-Backed System Workflow Tests
+
+PR #27 adds `test/database/parcelWorkflow.integration.test.js` and `npm run test:db`. The suite is designed to verify:
+
+| Scenario | Planned database-backed checks | Current status |
+|---|---|---|
+| SYS-01 | Username login and administrator/delivery-staff route boundaries | Pending execution |
+| SYS-02 | Parcel registration, tracking number, Booked status, initial history | Pending execution |
+| SYS-03 | Quote calculation using synthetic test-only pricing rows | Pending execution |
+| SYS-04 | AVAILABLE-only assignment, BUSY/OFF_DUTY rejection, staff reservation | Pending execution |
+| SYS-05 | Normal delivery statuses, shipment history, release of staff availability | Pending execution |
+| SYS-06 | Failed-delivery reason, attempt history, and rejection of attempt four | Pending execution |
+| SYS-07 | Return initiation/progression and persisted `completed_at` | Pending execution |
+| SYS-08 | Public tracking without login, privacy, malformed/unknown number handling | Pending execution |
+| SYS-09 | Performance/concurrency targets, browser/viewport behavior, database outage | Requires separately defined workload and manual/environmental testing |
+
+The test runner creates or updates only the guarded `parcel_db_test` database. Run it with `npm run test:db` after configuring local MySQL. Do not point it at `parcel_db` or production data.
+
+The CI job configured in [PR #27](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/pull/27) runs both the standard automated tests and the database workflow suite. No system scenario is recorded as Passed until the run output is available and reviewed.

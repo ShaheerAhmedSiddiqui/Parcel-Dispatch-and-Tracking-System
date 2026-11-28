@@ -2,7 +2,7 @@
 
 **Project:** Parcel Dispatch and Tracking System (ParcelTrack)  
 **Deliverable:** 6 — Test Execution and Defect Report  
-**Status:** No automated test failures reported; review candidates require confirmation
+**Status:** Three source-level gaps confirmed; code corrections and regression tests are proposed in PR #27; runtime retesting is pending
 
 ## 1. Defects Found During This Automated Run
 
@@ -18,11 +18,11 @@ No failing assertion or reproducible runtime defect was reported by the captured
 
 | Defect ID | Description | Severity | Priority | Status |
 |---|---|---|---|---|
-| DEF-001 | SRS FR-01 specifies username or email login, while the reviewed login controller uses email lookup (`findByEmail`) only. | To assess | To assess | Pending execution confirmation |
-| DEF-002 | Staff availability values (AVAILABLE, BUSY, OFF_DUTY) were not enforced consistently when listing/selecting and assigning staff in the reviewed implementation. | To assess | To assess | Pending execution confirmation |
-| DEF-003 | The reviewed return workflow did not wire the repository `completeReturn()` operation into the normal route/controller flow; `completed_at` may therefore remain unset. | To assess | To assess | Pending database verification |
+| DEF-001 | Username login was not wired although `findByUsername()` exists. | To assess with team | To assess with team | Fix proposed in PR #27; tests pending |
+| DEF-002 | Assignment listing and transaction did not enforce AVAILABLE status. | To assess with team | To assess with team | Fix proposed in PR #27; tests pending |
+| DEF-003 | Normal Returned to Sender updates bypassed `completeReturn()` and could leave `completed_at` NULL. | To assess with team | To assess with team | Fix proposed in PR #27; tests pending |
 
-These candidates should be rechecked against the current branch before being treated as confirmed defects. No fix or retest is claimed here.
+These three gaps were confirmed by inspecting the current `main` source. Corrections and regression tests are now included in [PR #27](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/pull/27). They are not marked fixed or retested until CI/database execution passes and the PR is merged.
 
 ### DEF-001 — Username login
 
@@ -62,3 +62,13 @@ These candidates should be rechecked against the current branch before being tre
 ## 4. Defect Lifecycle
 
 For each candidate, update this log only after reproducing it. Record the confirmed actual result, assign severity and priority with the project team, link the GitHub defect issue or fix PR, and update status to Fixed only after a correction is committed. A defect is not Closed until the relevant retest and regression checks pass.
+
+
+## 5. GitHub Defect Tracking
+
+- DEF-001 — [Issue #22: username-based staff login](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/issues/22)
+- DEF-002 — [Issue #23: staff availability enforcement](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/issues/23)
+- DEF-003 — [Issue #24: return completion timestamp](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/issues/24)
+- Proposed fixes and regression tests: [PR #27](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/pull/27)
+
+Severity and priority remain for team assessment. All three issues remain open pending CI execution, database verification, review, and merge.
