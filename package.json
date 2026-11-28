@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node src/server.js",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "test:db": "node scripts/run-database-tests.js"
   },
   "jest": {
     "testEnvironment": "node"

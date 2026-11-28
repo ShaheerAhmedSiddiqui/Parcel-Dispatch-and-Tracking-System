@@ -176,12 +176,29 @@ async function assignStaff(parcelId, staffId, updatedBy) {
              WHERE ds.staff_id = ?
                AND u.role = 'DELIVERY_STAFF'
                AND u.is_active = TRUE
+               AND ds.availability = 'AVAILABLE'
              FOR UPDATE`,
             [staffId]
         );
 
         if (!staffRows[0]) {
-            throw new Error('Active delivery staff member not found.');
+            const error = new Error('Available delivery staff member not found.');
+            error.status = 409;
+            throw error;
+        }
+
+        const [availabilityUpdate] = await connection.execute(
+            `UPDATE delivery_staff
+             SET availability = 'BUSY'
+             WHERE staff_id = ?
+               AND availability = 'AVAILABLE'`,
+            [staffId]
+        );
+
+        if (availabilityUpdate.affectedRows !== 1) {
+            const error = new Error('Delivery staff member is no longer available.');
+            error.status = 409;
+            throw error;
         }
 
         await connection.execute(
@@ -231,6 +248,10 @@ async function updateStatus(
     updatedBy,
     options = {}
 ) {
+    if (nextStatus === STATUSES.RETURNED_TO_SENDER) {
+        return completeReturn(parcelId, updatedBy);
+    }
+
     const connection = await pool.getConnection();
 
     try {
@@ -312,12 +333,20 @@ async function updateStatus(
             );
         }
 
+        const shouldUnassignStaff =
+            parcel.current_status === STATUSES.ASSIGNED &&
+            nextStatus === STATUSES.BOOKED;
+
         await connection.execute(
             `UPDATE parcels
              SET current_status = ?,
-                 attempt_count = ?
+                 attempt_count = ?,
+                 assigned_staff_id = CASE
+                    WHEN ? THEN NULL
+                    ELSE assigned_staff_id
+                 END
              WHERE parcel_id = ?`,
-            [nextStatus, newAttemptCount, parcelId]
+            [nextStatus, newAttemptCount, shouldUnassignStaff, parcelId]
         );
 
         await connection.execute(
@@ -333,6 +362,24 @@ async function updateStatus(
                 updatedBy
             ]
         );
+
+        const shouldReleaseStaff = Boolean(parcel.assigned_staff_id) && (
+            nextStatus === STATUSES.DELIVERED ||
+            (
+                parcel.current_status === STATUSES.ASSIGNED &&
+                nextStatus === STATUSES.BOOKED
+            )
+        );
+
+        if (shouldReleaseStaff) {
+            await connection.execute(
+                `UPDATE delivery_staff
+                 SET availability = 'AVAILABLE'
+                 WHERE staff_id = ?
+                   AND availability = 'BUSY'`,
+                [parcel.assigned_staff_id]
+            );
+        }
 
         await connection.commit();
 
@@ -465,7 +512,7 @@ async function completeReturn(parcelId, updatedBy) {
         await connection.beginTransaction();
 
         const [rows] = await connection.execute(
-            `SELECT parcel_id, current_status
+            `SELECT parcel_id, current_status, assigned_staff_id
              FROM parcels
              WHERE parcel_id = ?
              FOR UPDATE`,
@@ -521,6 +568,16 @@ async function completeReturn(parcelId, updatedBy) {
                 updatedBy
             ]
         );
+
+        if (parcel.assigned_staff_id) {
+            await connection.execute(
+                `UPDATE delivery_staff
+                 SET availability = 'AVAILABLE'
+                 WHERE staff_id = ?
+                   AND availability = 'BUSY'`,
+                [parcel.assigned_staff_id]
+            );
+        }
 
         await connection.commit();
 

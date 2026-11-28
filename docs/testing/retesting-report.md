@@ -2,7 +2,7 @@
 
 **Project:** Parcel Dispatch and Tracking System (ParcelTrack)  
 **Deliverable:** 6 — Test Execution and Defect Report  
-**Status:** No defect fixes retested in this cycle
+**Status:** Three regression retests passed in PR #27 CI; main-branch merge and local environment verification are pending
 
 ## 1. Purpose
 
@@ -12,26 +12,31 @@ This report records verification performed after a defect correction. A passing 
 
 | Metric | Result |
 |---|---:|
-| Confirmed defects fixed in this cycle | 0 |
-| Defect-specific retests executed | 0 |
-| Retests passed | 0 |
+| Defect corrections in PR #27 | 3 |
+| Defect-specific retests executed in CI | 3 |
+| Retests passed | 3 |
 | Retests failed | 0 |
-| Pending retests | 3 source-review candidates require reproduction/confirmation |
+| Pending merge/local parity verification | 3 fixes are not yet merged to `main` |
 
 ## 3. Retest Records
 
 | Retest ID | Related defect | Fix commit / PR | Retest steps | Expected result | Actual result | Status |
 |---|---|---|---|---|---|---|
-| RET-001 | DEF-001 — Username login | Not available | Execute username login with a valid controlled staff account | Username and email login comply with FR-01 | Not Run | Pending |
-| RET-002 | DEF-002 — Staff availability enforcement | Not available | Test assignment with AVAILABLE, BUSY, and OFF_DUTY staff profiles | Only eligible staff can be selected/assigned | Not Run | Pending |
-| RET-003 | DEF-003 — Return completion timestamp | Not available | Complete a return and inspect `parcel_returns.completed_at` | Completion timestamp is persisted | Not Run | Pending |
+| RET-001 | DEF-001 — Username login | [PR #27](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/pull/27) | Run authController regression tests and DB workflow with username/email | Both identifiers authenticate; role redirects work | Unit and DB workflow passed in CI run 46161684598 | Pass — PR branch; awaiting merge |
+| RET-002 | DEF-002 — Staff availability enforcement | [PR #27](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/pull/27) | Run repository regression tests and DB assignment workflow with AVAILABLE, BUSY, OFF_DUTY, inactive and concurrent assignments | Only AVAILABLE staff can be assigned; staff reservation is transactional | Regression tests and MySQL scenarios passed, including concurrent single-rider reservation | Pass — PR branch; awaiting merge |
+| RET-003 | DEF-003 — Return completion timestamp | [PR #27](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/pull/27) | Run repository regression test and DB return workflow; inspect `parcel_returns.completed_at` | Timestamp is persisted in the normal Returned to Sender flow | Unit regression and database return workflow passed; `completed_at` was non-NULL | Pass — PR branch; awaiting merge |
 
-The three rows are pending verification candidates from Deliverable 5 source review, not confirmed failures from the current automated run.
+The three rows record fixes to the gaps confirmed by source inspection. Retesting proves the proposed PR-branch behavior under CI; it does not mean the fixes are already merged to `main`.
 
 ## 4. Regression Testing
 
-The captured `npm test` run passed all 31 automated tests. It is recorded as a general automated baseline, not as a defect-specific retest. When a fix is committed, rerun the relevant automated test and all affected regression tests, then record the actual command output and evidence against the corresponding RET ID.
+The original Windows `npm test` run passed 31 tests before the fixes. It is a historical baseline. The later PR #27 CI run passed 38 regular tests and 9 isolated MySQL workflow tests. The three defect-specific regression records above are now Pass on the PR branch; repeat them after merge or against the final main commit before closing the defects.
 
 ## 5. Conclusion
 
-No defect fix or defect-specific retest was evidenced in this cycle. Do not mark DEF-001, DEF-002, or DEF-003 as fixed or closed until the behavior is reproduced, corrected, and retested successfully.
+All three fixes passed targeted regression coverage on PR #27. Keep the defect issues open until PR #27 is merged and the merged code is confirmed. Local Windows/XAMPP parity testing is still recommended before final project handover.
+
+
+## 7. Current Retest Execution Link
+
+The proposed regression tests and isolated database workflow suite are in [PR #27](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/pull/27). CI run [46161684598](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/actions/runs/46161684598) completed successfully: 38 regular tests and 9 MySQL workflow tests passed. The retest records above are Pass on the PR branch, pending merge to `main`.
