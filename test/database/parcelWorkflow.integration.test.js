@@ -191,20 +191,24 @@ databaseDescribe('ParcelTrack database-backed system workflows', () => {
     expect(publicTracking.text).not.toContain('Rs.');
   });
 
-  test('SYS-04 / TC-024: a BUSY or OFF_DUTY member cannot be assigned', async () => {
-    const busyStaff = await createStaff('BUSY');
-    const created = await registerParcel();
+  test.each(['BUSY', 'OFF_DUTY'])(
+    'SYS-04 / TC-024: rejects a %s staff member during assignment',
+    async (availability) => {
+      const unavailableStaff = await createStaff(availability);
+      const created = await registerParcel();
 
-    const result = await adminAgent
-      .post(`/parcels/${created.parcelId}/assign`)
-      .send({ staffId: busyStaff.staffId });
+      const result = await adminAgent
+        .post(`/parcels/${created.parcelId}/assign`)
+        .send({ staffId: unavailableStaff.staffId });
 
-    expect(result.status).toBe(409);
+      expect(result.status).toBe(409);
+      expect(result.body.success).toBe(false);
 
-    const parcel = await parcelRepository.findById(created.parcelId);
-    expect(parcel.current_status).toBe(STATUSES.BOOKED);
-    expect(parcel.assigned_staff_id).toBeNull();
-  });
+      const parcel = await parcelRepository.findById(created.parcelId);
+      expect(parcel.current_status).toBe(STATUSES.BOOKED);
+      expect(parcel.assigned_staff_id).toBeNull();
+    },
+  );
 
   test('SYS-06: failed-delivery reasons are recorded and the fourth attempt is rejected', async () => {
     const staff = await createStaff();

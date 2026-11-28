@@ -244,6 +244,13 @@ async function assignStaff(req, res, next) {
             message: 'Delivery staff assigned successfully.'
         });
     } catch (error) {
+        if (error.status === 409) {
+            return res.status(409).json({
+                success: false,
+                message: error.message
+            });
+        }
+
         next(error);
     }
 }

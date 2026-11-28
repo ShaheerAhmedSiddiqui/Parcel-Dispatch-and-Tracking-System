@@ -333,12 +333,20 @@ async function updateStatus(
             );
         }
 
+        const shouldUnassignStaff =
+            parcel.current_status === STATUSES.ASSIGNED &&
+            nextStatus === STATUSES.BOOKED;
+
         await connection.execute(
             `UPDATE parcels
              SET current_status = ?,
-                 attempt_count = ?
+                 attempt_count = ?,
+                 assigned_staff_id = CASE
+                    WHEN ? THEN NULL
+                    ELSE assigned_staff_id
+                 END
              WHERE parcel_id = ?`,
-            [nextStatus, newAttemptCount, parcelId]
+            [nextStatus, newAttemptCount, shouldUnassignStaff, parcelId]
         );
 
         await connection.execute(
