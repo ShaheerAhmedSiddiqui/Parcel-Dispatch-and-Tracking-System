@@ -76,9 +76,30 @@ async function getAllStaff() {
     return rows;
 }
 
+async function getAvailableStaff() {
+    const [rows] = await pool.execute(
+        `SELECT
+            ds.staff_id,
+            ds.user_id,
+            u.full_name,
+            u.email,
+            ds.phone,
+            ds.availability
+         FROM delivery_staff ds
+         INNER JOIN users u ON u.user_id = ds.user_id
+         WHERE u.role = 'DELIVERY_STAFF'
+           AND u.is_active = TRUE
+           AND ds.availability = 'AVAILABLE'
+         ORDER BY u.full_name ASC`
+    );
+
+    return rows;
+}
+
 module.exports = {
     findByEmail,
     findByUsername,
     findById,
-    getAllStaff
+    getAllStaff,
+    getAvailableStaff
 };

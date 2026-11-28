@@ -195,7 +195,7 @@ async function showParcelDetails(req, res, next) {
             parcelRepository.getShipmentHistory(parcelId),
             parcelRepository.getDeliveryAttempts(parcelId),
             parcelQueryRepository.getAssignedStaff(parcelId),
-            userRepository.getAllStaff()
+            userRepository.getAvailableStaff()
         ]);
 
         return res.render('admin/parcel-details', {

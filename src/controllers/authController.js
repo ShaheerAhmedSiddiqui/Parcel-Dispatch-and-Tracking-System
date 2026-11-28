@@ -12,17 +12,25 @@ function showLogin(req, res) {
 // Process login
 async function login(req, res, next) {
     try {
-        const email = (req.body.email || '').trim().toLowerCase();
+        const identifier = (
+            req.body.identifier || req.body.email || ''
+        ).trim().toLowerCase();
         const password = req.body.password || '';
 
-        if (!email || !password) {
+        if (!identifier || !password) {
             return res.status(400).render('login', {
                 title: 'Staff Login',
-                errorMessage: 'Please enter your email and password.'
+                errorMessage: 'Please enter your username/email and password.'
             });
         }
 
-        const user = await userRepository.findByEmail(email);
+        // Accept either the unique email or username. Keep the legacy email
+        // field supported while the login form uses the clearer identifier name.
+        let user = await userRepository.findByEmail(identifier);
+
+        if (!user) {
+            user = await userRepository.findByUsername(identifier);
+        }
 
         // Use a generic message to avoid revealing whether an account exists.
         if (!user || !user.is_active) {
