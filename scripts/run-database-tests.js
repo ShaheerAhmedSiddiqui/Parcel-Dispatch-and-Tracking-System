@@ -44,10 +44,11 @@ async function prepareTestDatabase() {
     const adminConnection = await mysql.createConnection(connectionOptions);
 
     try {
-        await adminConnection.query(
-            \`CREATE DATABASE IF NOT EXISTS \\\`\${TEST_DB_NAME}\\\`
-             CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci\`
-        );
+        // TEST_DB_NAME is restricted to letters, numbers, and underscores above.
+        const createDatabaseSql =
+            'CREATE DATABASE IF NOT EXISTS ' + TEST_DB_NAME +
+            ' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci';
+        await adminConnection.query(createDatabaseSql);
     } finally {
         await adminConnection.end();
     }
@@ -87,14 +88,14 @@ async function prepareTestDatabase() {
 
         for (const user of seedUsers) {
             await testConnection.execute(
-                \`INSERT INTO users
-                    (full_name, username, email, password_hash, role, is_active)
-                 VALUES (?, ?, ?, ?, ?, TRUE)
-                 ON DUPLICATE KEY UPDATE
-                    full_name = VALUES(full_name),
-                    password_hash = VALUES(password_hash),
-                    role = VALUES(role),
-                    is_active = TRUE\`,
+                'INSERT INTO users ' +
+                '(full_name, username, email, password_hash, role, is_active) ' +
+                'VALUES (?, ?, ?, ?, ?, TRUE) ' +
+                'ON DUPLICATE KEY UPDATE ' +
+                'full_name = VALUES(full_name), ' +
+                'password_hash = VALUES(password_hash), ' +
+                'role = VALUES(role), ' +
+                'is_active = TRUE',
                 [
                     user.fullName,
                     user.username,
@@ -111,11 +112,10 @@ async function prepareTestDatabase() {
         );
 
         await testConnection.execute(
-            \`INSERT INTO delivery_staff (user_id, phone, availability)
-             VALUES (?, ?, 'AVAILABLE')
-             ON DUPLICATE KEY UPDATE
-                phone = VALUES(phone),
-                availability = 'AVAILABLE'\`,
+            'INSERT INTO delivery_staff (user_id, phone, availability) ' +
+            'VALUES (?, ?, "AVAILABLE") ' +
+            'ON DUPLICATE KEY UPDATE ' +
+            'phone = VALUES(phone), availability = "AVAILABLE"',
             [riderRows[0].user_id, '03000000002']
         );
 
@@ -128,18 +128,18 @@ async function prepareTestDatabase() {
 
         for (const [type, base, perKg, perKm] of testPricing) {
             await testConnection.execute(
-                \`INSERT INTO pricing_rules
-                    (delivery_type, base_charge, per_kg_rate, per_km_rate)
-                 VALUES (?, ?, ?, ?)
-                 ON DUPLICATE KEY UPDATE
-                    base_charge = VALUES(base_charge),
-                    per_kg_rate = VALUES(per_kg_rate),
-                    per_km_rate = VALUES(per_km_rate)\`,
+                'INSERT INTO pricing_rules ' +
+                '(delivery_type, base_charge, per_kg_rate, per_km_rate) ' +
+                'VALUES (?, ?, ?, ?) ' +
+                'ON DUPLICATE KEY UPDATE ' +
+                'base_charge = VALUES(base_charge), ' +
+                'per_kg_rate = VALUES(per_kg_rate), ' +
+                'per_km_rate = VALUES(per_km_rate)',
                 [type, base, perKg, perKm]
             );
         }
 
-        console.log(\`Prepared isolated database: \${TEST_DB_NAME}\`);
+        console.log('Prepared isolated database: ' + TEST_DB_NAME);
         console.log('Seeded test-only accounts and synthetic pricing rules.');
     } finally {
         await testConnection.end();
