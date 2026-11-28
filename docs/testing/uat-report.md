@@ -57,7 +57,7 @@ UAT scenarios are prepared but have not been executed or accepted. Do not mark t
 
 ## 7. Deliverable 6 — UAT Execution Status
 
-The automated `npm test` run passed 6 suites and 31 tests, but it did not include UAT participants or acceptance decisions. All seven UAT scenarios above therefore remain **Not Run / Pending**. No reviewer sign-off, acceptance, rejection, or conditional acceptance is claimed.
+The latest PR #27 CI run passed 38 regular automated tests and 9 isolated MySQL workflow tests, but it did not include human acceptance participants or reviewer decisions. All seven UAT scenarios above therefore remain **Not Run / Pending**. No reviewer sign-off, acceptance, rejection, or conditional acceptance is claimed.
 
 UAT must be performed separately with the Administrator / Courier Clerk, Delivery Staff, and public Customer workflows, using synthetic data and recording actual results and reviewer decisions.
 
@@ -69,3 +69,8 @@ UAT must be performed separately with the Administrator / Courier Clerk, Deliver
 The database-backed automated workflow suite is not a substitute for acceptance by project users. All seven UAT scenarios above remain Not Run / Pending.
 
 The Administrator / Courier Clerk, Delivery Staff, and public Customer scenarios must be demonstrated and reviewed using the application UI and synthetic records. Record the participant/reviewer, date, actual result, decision, comments, and screenshot evidence for each scenario. No acceptance or sign-off is claimed in this report.
+
+
+## 8. Latest automated system test context
+
+CI workflow [46161259201](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/actions/runs/46161259201) passed 38 regular tests and 9 MySQL-backed workflow tests. This is engineering/system verification, not a human acceptance decision. UAT-01 to UAT-07 must still be demonstrated to the Administrator / Courier Clerk, Delivery Staff, and public Customer representatives, with named reviewers, actual outcomes, decisions, dates and screenshots.
