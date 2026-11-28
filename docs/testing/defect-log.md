@@ -30,7 +30,7 @@ These three gaps were confirmed by inspecting the current `main` source. Correct
 - **Reproduction steps:** Prepare a controlled staff account with a username distinct from its email; open staff login; enter the username and valid password; submit.
 - **Expected result:** Login accepts the username or email with a valid password.
 - **Observed result:** Username and email login regression tests passed in CI; the MySQL-backed administrator and Delivery Staff login workflow also passed.
-- **Evidence:** PR #27 CI run 46161259201; `test/controllers/authController.test.js` and database workflow.
+- **Evidence:** PR #27 CI run 46161684598; `test/controllers/authController.test.js` and database workflow.
 - **Severity / priority:** To be assessed after reproduction.
 
 ### DEF-002 — Staff availability enforcement
@@ -39,7 +39,7 @@ These three gaps were confirmed by inspecting the current `main` source. Correct
 - **Reproduction steps:** Prepare active staff profiles with AVAILABLE, BUSY, and OFF_DUTY values; open assignment options; attempt assignment to each profile.
 - **Expected result:** Only staff that satisfy the approved availability rule are offered and assignable.
 - **Observed result:** AVAILABLE assignment and BUSY/OFF_DUTY/inactive/unknown rejection passed in isolated MySQL tests. Concurrent assignment also confirmed that only one parcel can reserve the same AVAILABLE staff member.
-- **Evidence:** PR #27 CI run 46161259201; repository regression tests and database workflow. Browser UI review remains pending.
+- **Evidence:** PR #27 CI run 46161684598; repository regression tests and database workflow. Browser UI review remains pending.
 - **Severity / priority:** To be assessed after reproduction.
 
 ### DEF-003 — Return completion timestamp
@@ -48,7 +48,7 @@ These three gaps were confirmed by inspecting the current `main` source. Correct
 - **Reproduction steps:** Prepare a parcel with an initiated return; advance it through the permitted return workflow; complete the return; inspect the corresponding `parcel_returns.completed_at` value.
 - **Expected result:** The completion timestamp is stored when the return reaches Returned to Sender.
 - **Observed result:** Return initiation, progression, and the normal Returned to Sender status endpoint passed the database workflow; `parcel_returns.completed_at` was verified non-NULL.
-- **Evidence:** PR #27 CI run 46161259201; `test/unit/parcelRepository.return.test.js` and MySQL-backed return workflow.
+- **Evidence:** PR #27 CI run 46161684598; `test/unit/parcelRepository.return.test.js` and MySQL-backed return workflow.
 - **Severity / priority:** To be assessed after reproduction.
 
 ## 3. Environment and Test Dependencies (Not Product Defects)

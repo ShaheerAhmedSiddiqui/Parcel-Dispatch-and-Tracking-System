@@ -22,7 +22,7 @@ This report records verification performed after a defect correction. A passing 
 
 | Retest ID | Related defect | Fix commit / PR | Retest steps | Expected result | Actual result | Status |
 |---|---|---|---|---|---|---|
-| RET-001 | DEF-001 — Username login | [PR #27](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/pull/27) | Run authController regression tests and DB workflow with username/email | Both identifiers authenticate; role redirects work | Unit and DB workflow passed in CI run 46161259201 | Pass — PR branch; awaiting merge |
+| RET-001 | DEF-001 — Username login | [PR #27](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/pull/27) | Run authController regression tests and DB workflow with username/email | Both identifiers authenticate; role redirects work | Unit and DB workflow passed in CI run 46161684598 | Pass — PR branch; awaiting merge |
 | RET-002 | DEF-002 — Staff availability enforcement | [PR #27](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/pull/27) | Run repository regression tests and DB assignment workflow with AVAILABLE, BUSY, OFF_DUTY, inactive and concurrent assignments | Only AVAILABLE staff can be assigned; staff reservation is transactional | Regression tests and MySQL scenarios passed, including concurrent single-rider reservation | Pass — PR branch; awaiting merge |
 | RET-003 | DEF-003 — Return completion timestamp | [PR #27](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/pull/27) | Run repository regression test and DB return workflow; inspect `parcel_returns.completed_at` | Timestamp is persisted in the normal Returned to Sender flow | Unit regression and database return workflow passed; `completed_at` was non-NULL | Pass — PR branch; awaiting merge |
 
@@ -39,4 +39,4 @@ All three fixes passed targeted regression coverage on PR #27. Keep the defect i
 
 ## 7. Current Retest Execution Link
 
-The proposed regression tests and isolated database workflow suite are in [PR #27](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/pull/27). CI run [46161259201](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/actions/runs/46161259201) completed successfully: 38 regular tests and 9 MySQL workflow tests passed. The retest records above are Pass on the PR branch, pending merge to `main`.
+The proposed regression tests and isolated database workflow suite are in [PR #27](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/pull/27). CI run [46161684598](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/actions/runs/46161684598) completed successfully: 38 regular tests and 9 MySQL workflow tests passed. The retest records above are Pass on the PR branch, pending merge to `main`.

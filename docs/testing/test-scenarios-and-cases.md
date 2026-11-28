@@ -175,20 +175,20 @@ The following regression coverage has been added. Actual test results remain pen
 
 Run the additional MySQL-backed system workflows with `npm run test:db` after setting up a local MySQL service. The runner uses a separate `parcel_db_test` database and synthetic pricing rows; it must not be pointed at `parcel_db`.
 
-The regression and database tests listed here passed in CI run 46161259201. SYS-09 is partially passed only; browser/viewport checks and all seven human UAT scenarios still require separately gathered evidence.
+The regression and database tests listed here passed in CI run 46161684598. SYS-09 is partially passed only; browser/viewport checks and all seven human UAT scenarios still require separately gathered evidence.
 
 
 ---
 
 ## 13. Latest CI System and Regression Execution
 
-Latest run: [GitHub Actions 46161259201](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/actions/runs/46161259201), PR #27 commit `558bff8f71635c3045bb52caf3bb63ab17f5f1a6`.
+Latest run: [GitHub Actions 46161684598](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/actions/runs/46161684598), PR #27 commit `fda469d7effa48d5ad20f111821fd917978af1e4`.
 
 - `npm test`: 38 passed, 0 failed (9 DB-specific tests are skipped from this command and run separately).
 - `npm run test:db`: 9 passed, 0 failed, using MySQL 8.0.46 and isolated `parcel_db_test`.
 - Combined CI execution: 47 tests passed, 0 failed.
 - All three defect-specific regression records passed on the PR branch.
 - SYS-01 to SYS-08 workflow checks passed in the automated database suite.
-- SYS-09 concurrency check passed and the 20-request sequential tracking p95 sample was 4.56 ms.
+- SYS-09 concurrency check passed and the 20-request sequential tracking p95 sample was 4.21 ms.
 
 The CI tests use HTTP requests and a synthetic database. They do not constitute human UAT, visual browser/viewport review, database outage testing, broad stress/load testing, or execution of every TC-001 to TC-047 permutation. TC-042, TC-043, TC-044, TC-046 and TC-047 therefore remain Not Run or Partial as applicable.

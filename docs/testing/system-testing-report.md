@@ -12,7 +12,7 @@ Record the results of testing complete ParcelTrack workflows from the perspectiv
 
 | Field | Execution detail |
 |---|---|
-| Branch / commit under test | `fix/deliverable-6-verified-defects` / `558bff8f71635c3045bb52caf3bb63ab17f5f1a6` |
+| Branch / commit under test | `fix/deliverable-6-verified-defects` / `fda469d7effa48d5ad20f111821fd917978af1e4` |
 | Test date | 28 November 2026 |
 | Tester / execution agent | GitHub Actions CI (automated; no human UAT reviewer) |
 | Operating system | Ubuntu 26.04.1 |
@@ -34,7 +34,7 @@ Record the results of testing complete ParcelTrack workflows from the perspectiv
 | SYS-06 | Record failed delivery and attempts | TC-029 to TC-032 | Failure reason is required; count is maintained; attempt limit is enforced | Blank failure reason was rejected; three attempts were recorded in order; fourth failure was rejected without incrementing the count. | Pass — automated CI / isolated MySQL |
 | SYS-07 | Initiate and complete a return | TC-033 to TC-035 | Return progression is valid and completed_at is stored upon completion | Return Initiated → Return in Transit → Returned to Sender completed through the normal endpoint; `completed_at` was non-NULL. | Pass — automated CI / isolated MySQL |
 | SYS-08 | Customer tracking and privacy | TC-036 to TC-041 | Public tracking works without login and exposes only permitted information | Public tracking returned an existing parcel without login, excluded personal/contact/address/charge data, rejected mutation, and handled malformed/unknown numbers. | Pass — automated CI / isolated MySQL |
-| SYS-09 | Error and non-functional behavior | TC-042 to TC-047 | Performance, concurrency, database errors, password storage, input safety, and browser usability are evaluated | Concurrent assignment protection passed; 20 sequential public tracking requests produced p95 4.56 ms. This is only a low-load baseline; broad load, DB outage and browser compatibility tests remain pending. | Partial Pass — CI low-load baseline only |
+| SYS-09 | Error and non-functional behavior | TC-042 to TC-047 | Performance, concurrency, database errors, password storage, input safety, and browser usability are evaluated | Concurrent assignment protection passed; 20 sequential public tracking requests produced p95 4.21 ms. This is only a low-load baseline; broad load, DB outage and browser compatibility tests remain pending. | Partial Pass — CI low-load baseline only |
 
 ## 4. Execution Summary
 
@@ -58,9 +58,9 @@ Record the results of testing complete ParcelTrack workflows from the perspectiv
 
 | Defect ID | Related test case | Summary | Severity | Evidence / link | State |
 |---|---|---|---|---|---|
-| #23 | TC-024 | Availability filtering and transactional reservation | To be assessed | PR #27 CI run 46161259201 | Retested Pass on PR branch; awaiting merge |
-| #24 | TC-035 | Return completion timestamp in normal status workflow | To be assessed | PR #27 CI run 46161259201 | Retested Pass on PR branch; awaiting merge |
-| #22 | FR-01 / TC-001 | Username login support | To be assessed | PR #27 CI run 46161259201 | Retested Pass on PR branch; awaiting merge |
+| #23 | TC-024 | Availability filtering and transactional reservation | To be assessed | PR #27 CI run 46161684598 | Retested Pass on PR branch; awaiting merge |
+| #24 | TC-035 | Return completion timestamp in normal status workflow | To be assessed | PR #27 CI run 46161684598 | Retested Pass on PR branch; awaiting merge |
+| #22 | FR-01 / TC-001 | Username login support | To be assessed | PR #27 CI run 46161684598 | Retested Pass on PR branch; awaiting merge |
 | To be assigned | TC-020 | Fresh seed does not include pricing rules | Test environment dependency | database/seed.sql | Pending |
 
 Create or link GitHub defect issues only after confirming the observed failure through reproducible execution, except where a source-level implementation gap is explicitly being tracked separately.
@@ -118,13 +118,13 @@ PR #27 adds `test/database/parcelWorkflow.integration.test.js` and `npm run test
 
 The test runner creates or updates only the guarded `parcel_db_test` database. Run it with `npm run test:db` after configuring local MySQL. Do not point it at `parcel_db` or production data.
 
-CI run [46161259201](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/actions/runs/46161259201) completed successfully: 38 regular tests and 9 database tests passed, with no failures. SYS-01 to SYS-08 automated workflow checks passed; SYS-09 is partially passed. These are PR-branch results and await merge.
+CI run [46161684598](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/actions/runs/46161684598) completed successfully: 38 regular tests and 9 database tests passed, with no failures. SYS-01 to SYS-08 automated workflow checks passed; SYS-09 is partially passed. These are PR-branch results and await merge.
 
 
 ### CI evidence details
 
-- Workflow: [GitHub Actions run 46161259201](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/actions/runs/46161259201)
+- Workflow: [GitHub Actions run 46161684598](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/actions/runs/46161684598)
 - Standard suite: 38 passed, 0 failed; 9 database tests are skipped here because the separate DB command runs them.
 - Isolated database suite: 9 passed, 0 failed.
 - Total executed in the CI job: 47 tests passed, 0 failed.
-- Tracking performance sample: p95 4.56 ms for 20 sequential requests in this CI runner. This is not a representative load test or a formal NFR acceptance result.
+- Tracking performance sample: p95 4.21 ms for 20 sequential requests in this CI runner. This is not a representative load test or a formal NFR acceptance result.

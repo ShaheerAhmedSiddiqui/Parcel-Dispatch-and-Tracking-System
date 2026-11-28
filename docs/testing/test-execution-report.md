@@ -145,8 +145,8 @@ Regression tests were added under `test/controllers/` and `test/unit/`. An isola
 
 ## 11. Updated CI Execution — PR #27
 
-**CI run:** [46161259201](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/actions/runs/46161259201)  
-**Commit:** `558bff8f71635c3045bb52caf3bb63ab17f5f1a6`  
+**CI run:** [46161684598](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/actions/runs/46161684598)  
+**Commit:** `fda469d7effa48d5ad20f111821fd917978af1e4`  
 **Date:** 28 November 2026  
 **Environment:** Ubuntu 26.04.1, Node.js 22.23.5, npm 10.9.9, MySQL 8.0.46  
 **Database:** guarded, isolated `parcel_db_test` with synthetic accounts and test-only tariff values
@@ -191,7 +191,7 @@ The nine tests verified:
 - Return initiation/progression through the normal endpoint and a non-NULL `parcel_returns.completed_at`.
 - Public tracking without login, an existing tracking result, privacy of sender/receiver personal information and charges, read-only access, malformed and unknown tracking-number handling.
 - Concurrent assignment: two simultaneous parcel assignments competing for one AVAILABLE staff profile resulted in one successful assignment and one HTTP 409; the rider was not double-booked.
-- A low-load response-time sample: 20 sequential public tracking requests, p95 **4.56 ms** in this CI environment.
+- A low-load response-time sample: 20 sequential public tracking requests, p95 **4.21 ms** in this CI environment.
 
 ### 11.3 Combined execution interpretation
 

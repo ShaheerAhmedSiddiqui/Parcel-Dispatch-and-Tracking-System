@@ -41,7 +41,7 @@ These are new tests and are not part of the original screenshot evidence. Captur
 
 ## 3. Updated PR #27 CI Evidence — 28 November 2026
 
-**Workflow run:** [46161259201](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/actions/runs/46161259201)  
+**Workflow run:** [46161684598](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/actions/runs/46161684598)  
 **Commit:** `558bff8f71635c3045bb52caf3bb63ab17f5f1a6`  
 **Environment:** Ubuntu 26.04.1, Node.js 22.23.5, npm 10.9.9, MySQL 8.0.46
 
@@ -58,7 +58,7 @@ These are new tests and are not part of the original screenshot evidence. Captur
 - 9 tests passed, 0 failed.
 - Synthetic pricing rows and test accounts were created only in `parcel_db_test`.
 - Tested role access, parcel quote/registration, tracking uniqueness, staff availability/assignment, delivery, failure attempts, returns, public privacy/read-only behavior, concurrent assignment, and a low-load tracking response-time sample.
-- SYS-09 sample: 20 sequential tracking requests, p95 4.56 ms in this CI environment.
+- SYS-09 sample: 20 sequential tracking requests, p95 4.21 ms in this CI environment.
 
 **Combined result:** 47 tests passed, 0 failed. This CI evidence is on PR #27 and does not mean the fixes are merged to `main`.
 

@@ -56,7 +56,7 @@ This matrix links SRS requirements and business rules to test cases. A mapping i
 | NFR-02 | Clear validation errors | TC-003, TC-004, TC-010 to TC-014, TC-030, TC-038, TC-039, TC-047 | Functional / usability | Not Run |
 | NFR-03 | Clear labels and instructions | TC-047 | Browser inspection / UAT | Not Run |
 | NFR-04 | Public tracking without account | TC-036, TC-037 | Integration / system | Not Run |
-| NFR-05 | 95% of normal requests within 2 seconds | TC-042 | Partial Pass — 20 sequential tracking requests measured p95 4.56 ms; representative load test not run | Not Run |
+| NFR-05 | 95% of normal requests within 2 seconds | TC-042 | Partial Pass — 20 sequential tracking requests measured p95 4.21 ms; representative load test not run | Not Run |
 | NFR-06 | Acceptable tracking response time | TC-042 | Partial Pass — same limited tracking p95 baseline; agreed acceptance workload remains untested | Not Run |
 | NFR-07 | Concurrent staff use | TC-043 | Partial Pass — two concurrent assignments to one staff member resulted in one success/one conflict; broad concurrent staff load not run | Not Run |
 | NFR-08 | Accurate records; no incomplete saves | TC-009, TC-010, TC-012, TC-013, TC-017 | Partial Pass — valid parcel insert and persisted status/history verified; full interrupted-save scenarios not run | Not Run |
@@ -111,7 +111,7 @@ This matrix links SRS requirements and business rules to test cases. A mapping i
 
 ## 6. Coverage Notes and Known Gaps
 
-- FR-01, FR-16 and FR-28 source-level gaps were corrected on PR #27 and their regression / MySQL checks passed in CI run 46161259201. The changes are not yet merged to main.
+- FR-01, FR-16 and FR-28 source-level gaps were corrected on PR #27 and their regression / MySQL checks passed in CI run 46161684598. The changes are not yet merged to main.
 - The repository seed does not insert company pricing tariffs. CI used synthetic values only in the isolated parcel_db_test database; these are not proposed as production prices.
 - NFR-05/NFR-06 performance evidence remains partial: the CI run captured a 20-request sequential tracking p95 sample, not a full load test.
 - NFR-07 evidence remains partial: concurrent assignment protection was tested, but broad concurrent staff usage has not been measured.
@@ -153,15 +153,15 @@ The initial Windows baseline recorded 35.30% line coverage. The later CI run imp
 
 | Requirement | New test coverage | Current execution status |
 |---|---|---|
-| FR-01 — username or email login | `test/controllers/authController.test.js`; database-backed role login | Pass — CI run 46161259201; awaiting merge |
-| FR-16 — available staff assignment | `test/unit/userRepository.test.js`, `test/unit/parcelRepository.assignment.test.js`; MySQL assignment workflow | Pass — CI run 46161259201; awaiting merge |
-| FR-28 / NFR-24 — return completion timestamp | `test/unit/parcelRepository.return.test.js`; MySQL return workflow | Pass — CI run 46161259201; awaiting merge |
+| FR-01 — username or email login | `test/controllers/authController.test.js`; database-backed role login | Pass — CI run 46161684598; awaiting merge |
+| FR-16 — available staff assignment | `test/unit/userRepository.test.js`, `test/unit/parcelRepository.assignment.test.js`; MySQL assignment workflow | Pass — CI run 46161684598; awaiting merge |
+| FR-28 / NFR-24 — return completion timestamp | `test/unit/parcelRepository.return.test.js`; MySQL return workflow | Pass — CI run 46161684598; awaiting merge |
 
 The new tests do not count as passed until the updated suite completes successfully. Database workflow evidence is reported separately from the original 31-test baseline.
 
 
 ## 10. CI Execution Reference
 
-The above statuses are based on PR #27 CI run [46161259201](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/actions/runs/46161259201). The run passed 38 regular automated tests and 9 isolated MySQL workflow tests. These statuses apply to the PR branch; code fixes are not yet merged to `main`.
+The above statuses are based on PR #27 CI run [46161684598](https://github.com/ShaheerAhmedSiddiqui/Parcel-Dispatch-and-Tracking-System/actions/runs/46161684598). The run passed 38 regular automated tests and 9 isolated MySQL workflow tests. These statuses apply to the PR branch; code fixes are not yet merged to `main`.
 
 Requirements that depend on browser visual inspection, database outage, broad performance/load, all negative input permutations and the seven human UAT decisions remain Not Run or Partial Pass as indicated above.
